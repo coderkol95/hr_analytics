@@ -14,11 +14,16 @@
 <body>
     <div class="page">
         <div class="container">
-            <form action="/create_JD" method="post">
-
+            
+            <form name="jd_details" class="formclass" action="/create_JD" method="post">
+                <div class="field">
+                    <div class="centerer">
+                        <button class='glowing-btn' onclick="window.location='/'"><span class='glowing-txt'>Homepage</span></button>
+                    </div>
+                </div>
                 <div class="field">
                     <div class="label">
-                        <label for="metadata">About the company and role:</label>
+                        <label for="metadata"><span class='glowing-txt'>About the company and role:</span></label>
                     </div>
                     <div class="box">     
                         <textarea id="metadata" data-autosize-input='{ "space": 40 }' name="metadata" onkeyup="adjustTextareaHeight('metadata')" required></textarea>
@@ -27,7 +32,7 @@
 
                 <div class="field">
                     <div class="label">
-                        <label for="designation">Designation:</label>
+                        <label for="designation"><span class='glowing-txt'>Designation:</span></label>
                     </div>
                     <div class="box">     
                         <textarea id="designation" data-autosize-input='{ "space": 40 }' name="designation" onkeyup="adjustTextareaHeight('designation')" required></textarea>
@@ -36,7 +41,7 @@
 
                 <div class="field">
                     <div class="label">
-                        <label for="min_education">Min. educational qualifications required:</label>
+                        <label for="min_education"><span class='glowing-txt'>Min. educational qualifications required:</span></label>
                     </div>
                     <div class="box">     
                         <textarea id="min_education" data-autosize-input='{ "space": 40 }' name="min_education" onkeyup="adjustTextareaHeight('min_education')" required></textarea>
@@ -45,7 +50,7 @@
 
                 <div class="field">
                     <div class="label">
-                <label for="experience">Min. experience required:</label>
+                <label for="experience"><span class='glowing-txt'>Min. experience required:</span></label>
                     </div>
                     <div class="box">     
                         <input type="number" name="experience" min="0" max="15" required>
@@ -54,7 +59,7 @@
 
                 <div class="field">
                     <div class="label">
-                        <label for="responsibilities">Roles and responsibilities:</label>
+                        <label for="responsibilities"><span class='glowing-txt'>Roles and responsibilities:</span></label>
                     </div>
                     <div class="box">     
                         <textarea id="responsibilities" data-autosize-input='{ "space": 40 }' name="responsibilities" onkeyup="adjustTextareaHeight('responsibilities')" required></textarea>
@@ -63,7 +68,7 @@
 
                 <div class="field">
                     <div class="label">
-                        <label for="techstack">Required experience in tools and technologies:</label>
+                        <label for="techstack"><span class='glowing-txt'>Required experience in tools and technologies:</span></label>
                     </div>
                     <div class="box">     
                         <textarea id="techstack" data-autosize-input='{ "space": 40 }' name="techstack" onkeyup="adjustTextareaHeight('techstack')" required></textarea>
@@ -72,7 +77,7 @@
 
                 <div class="field">
                     <div class="label">
-                        <label for="other_tools">Anything else that you are looking for:</label>
+                        <label for="other_tools"><span class='glowing-txt'>Anything else that you are looking for:</span></label>
                     </div>
                     <div class="box">     
                         <textarea id="other_tools" data-autosize-input='{ "space": 40 }' name="other_tools" onkeyup="adjustTextareaHeight('other_tools')" required></textarea>
@@ -80,12 +85,7 @@
                 </div>
                 <div class="field">
                     <div class="centerer">
-                        <input type="submit" value="Submit">
-                    </div>
-                </div>
-                <div class="field">
-                    <div class="centerer">
-                        <a href="/">Homepage</a>
+                        <button class='glowing-btn'><span onclick="jd_details.submit()" class='glowing-txt'>Create job description</span></button>
                     </div>
                 </div>
             </form>
@@ -96,7 +96,11 @@
                 <div class="label">
                     {% if generated_jd %}
                     <textarea class="jdarea" id="generated_job_desc" data-autosize-input='{ "space": 40 }' name="generated_job_desc" onkeyup="adjustTextareaHeight('generated_job_desc')">{{generated_jd}}</textarea>              
-                    <button onclick="save_job_desc()">Save Job Description</button>
+                    
+                    <div class="centerer">
+                        <button class='glowing-btn' onclick="save_job_desc()"><span class='glowing-txt'>Save job description</span></button>
+                    </div>
+
                     {% else %}
                         Waiting for your input ...
                     {% endif %}    

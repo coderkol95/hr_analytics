@@ -7,8 +7,8 @@
 
 # JD generation (Anupam)
 
-[ ] Accept metadata from user about company and role
-[ ] Accept user inputs: min experience, job role, experience required in tools and technologies, other tools and technologies, ...
+[x] Accept metadata from user about company and role
+[x] Accept user inputs: min experience, job role, experience required in tools and technologies, other tools and technologies, ...
 [ ] API call to generate JD
 [ ] Highly visually appealing webpage (WoW factor)
 
