@@ -1,0 +1,56 @@
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: black;
+  }
+
+.page {
+/* display: flex; */
+justify-content:center;
+align-items:center;
+height: 100%; /* Set the height of the page div */
+}
+
+.container {
+display: flex;
+justify-content: center;
+gap: 2px; 
+}
+
+.field {
+display: flex;
+justify-content: space-between;
+padding: 0.8em 0.4em;
+}
+
+.centerer{
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+    text-align: center;
+}
+
+.label {
+    color: aliceblue;
+    padding-right: 0.4em;
+}
+
+.box {
+}
+
+.jdarea {
+    width: 700px;
+}
+
+textarea {
+    width: 200px;
+    height:15px;
+    line-height:15px;
+    min-width: 200px;
+    max-width: 300px;
+    transition: width 0.25s;
+    resize:none;
+    overflow:hidden;
+}

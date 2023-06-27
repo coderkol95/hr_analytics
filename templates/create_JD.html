@@ -1,0 +1,111 @@
+<!-- TOdo
+1. Accept metadata
+2. Accept details: min experience, job role, experience required in tools and technologies, other tools and technologies
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create JD</title>
+    <link rel="stylesheet" type="text/css" href="static/css/create_JD.css">
+</head>
+<body>
+    <div class="page">
+        <div class="container">
+            <form action="/create_JD" method="post">
+
+                <div class="field">
+                    <div class="label">
+                        <label for="metadata">About the company and role:</label>
+                    </div>
+                    <div class="box">     
+                        <textarea id="metadata" data-autosize-input='{ "space": 40 }' name="metadata" onkeyup="adjustTextareaHeight('metadata')" required></textarea>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="label">
+                        <label for="designation">Designation:</label>
+                    </div>
+                    <div class="box">     
+                        <textarea id="designation" data-autosize-input='{ "space": 40 }' name="designation" onkeyup="adjustTextareaHeight('designation')" required></textarea>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="label">
+                        <label for="min_education">Min. educational qualifications required:</label>
+                    </div>
+                    <div class="box">     
+                        <textarea id="min_education" data-autosize-input='{ "space": 40 }' name="min_education" onkeyup="adjustTextareaHeight('min_education')" required></textarea>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="label">
+                <label for="experience">Min. experience required:</label>
+                    </div>
+                    <div class="box">     
+                        <input type="number" name="experience" min="0" max="15" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="label">
+                        <label for="responsibilities">Roles and responsibilities:</label>
+                    </div>
+                    <div class="box">     
+                        <textarea id="responsibilities" data-autosize-input='{ "space": 40 }' name="responsibilities" onkeyup="adjustTextareaHeight('responsibilities')" required></textarea>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="label">
+                        <label for="techstack">Required experience in tools and technologies:</label>
+                    </div>
+                    <div class="box">     
+                        <textarea id="techstack" data-autosize-input='{ "space": 40 }' name="techstack" onkeyup="adjustTextareaHeight('techstack')" required></textarea>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="label">
+                        <label for="other_tools">Anything else that you are looking for:</label>
+                    </div>
+                    <div class="box">     
+                        <textarea id="other_tools" data-autosize-input='{ "space": 40 }' name="other_tools" onkeyup="adjustTextareaHeight('other_tools')" required></textarea>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="centerer">
+                        <input type="submit" value="Submit">
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="centerer">
+                        <a href="/">Homepage</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="container">
+            <div class="field">
+                <div class="label">
+                    {% if generated_jd %}
+                    <textarea class="jdarea" id="generated_job_desc" data-autosize-input='{ "space": 40 }' name="generated_job_desc" onkeyup="adjustTextareaHeight('generated_job_desc')">{{generated_jd}}</textarea>              
+                    <button onclick="save_job_desc()">Save Job Description</button>
+                    {% else %}
+                        Waiting for your input ...
+                    {% endif %}    
+                </div>
+            </div>
+        </div>
+    </div>
+    </body>
+    <script src="static/scripts/create_JD.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</body>
+</html>

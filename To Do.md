@@ -1,6 +1,6 @@
 # To Do:
 
-[ ] Landing page
+[x] Landing page
 [ ] JD generation
 [ ] Resume parsing
 [ ] Candidate recommendation

@@ -1,5 +1,5 @@
-from flask import Flask, redirect,render_template
-
+from flask import Flask, redirect,render_template, request, jsonify
+from llm import generate_jd
 
 app = Flask(__name__)
 
@@ -7,9 +7,24 @@ app = Flask(__name__)
 def home():
     return render_template("home.html")
 
-@app.route("/create_JD")
+@app.route("/create_JD", methods=['GET','POST'])
 def create_JD():
-    return render_template("create_JD.html")
+
+    if request.method=="POST":
+
+        metadata=request.form['metadata']
+        designation=request.form['designation']
+        min_education=request.form['min_education']
+        experience=request.form['experience']
+        responsibilities=request.form['responsibilities']
+        techstack=request.form['techstack']
+        other_tools=request.form['other_tools']
+
+        jd_from_openai = generate_jd(metadata,designation,min_education,experience,responsibilities,techstack,other_tools)
+
+        return render_template("create_JD.html", generated_jd=jd_from_openai)
+
+    return render_template("create_JD.html", generate_jd=None)
 
 @app.route("/recommend_candidate")
 def recommend_candidate():
@@ -18,6 +33,17 @@ def recommend_candidate():
 @app.route("/parse_resume")
 def parse_resume():
     return render_template("parse_resume.html")
+
+@app.route("/save_job_desc", methods=['GET','POST'])
+def save_job_desc():
+
+    if request.method=="POST":
+
+        job_desc = request.get_json()
+        print(job_desc)
+        # Write out to file
+
+        return 'OK', 200
 
 if __name__=="__main__":
 
