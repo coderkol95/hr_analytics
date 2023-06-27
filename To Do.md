@@ -1,24 +1,25 @@
 # To Do:
 
-[ ] WoW factor
+[ ] Landing page
 [ ] JD generation
 [ ] Resume parsing
 [ ] Candidate recommendation
 
-# JD generation
+# JD generation (Anupam)
 
 [ ] Accept metadata from user about company and role
-[ ] Accept user inputs: min experience, experience required in tools and technologies, other tools and technologies
+[ ] Accept user inputs: min experience, job role, experience required in tools and technologies, other tools and technologies, ...
 [ ] API call to generate JD
-[ ] Highly visually appealing webpage
+[ ] Highly visually appealing webpage (WoW factor)
 
-# Resume parsing
+# Resume parsing (KD)
 
 [ ] Parse these details: candidate name, email, phone number, educational qualifications, experience in technologies, years of experience
 [ ] Prompt
-[ ]
+[ ] Store resumes in Pinecone
+[ ] WoW factor
 
-# Candidate recommendation
+# Candidate recommendation 
 
 [ ] Accept job role (team lead), tools and technologies, educational experience, min. years of experience, ...
 [ ] Score resumes as a system
