@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PDF Uploader</title>
+</head>
+<body>
+    <h1>PDF Uploader</h1>
+        <input type="file" id="pdf-file" accept=".pdf">
+        <input type="button" value="Submit" onclick="uploadPDF()">
+
+    <textarea id="output" rows="4" cols="41">{{resume_info}}</textarea>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="static/scripts/uploadPDF.js"></script>
+</body>
+</html>
