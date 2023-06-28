@@ -1,4 +1,4 @@
-from flask import Flask, redirect,render_template, request, jsonify
+from flask import Flask, render_template, request
 from llm import generate_jd
 
 app = Flask(__name__)
@@ -19,8 +19,10 @@ def create_JD():
         responsibilities=request.form['responsibilities']
         techstack=request.form['techstack']
         other_tools=request.form['other_tools']
-
-        jd_from_openai = generate_jd(metadata,designation,min_education,experience,responsibilities,techstack,other_tools)
+        role_type=request.form['role_type']
+        role_location=request.form['role_location']
+        requisition_id = request.form['requisition_id']
+        jd_from_openai = generate_jd(metadata,designation,min_education,experience,responsibilities,techstack,other_tools,role_type,role_location, requisition_id)
 
         return render_template("create_JD.html", generated_jd=jd_from_openai)
 
