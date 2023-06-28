@@ -1,9 +1,13 @@
 import os 
-import openai
+import pandas as pd
 from dotenv import load_dotenv
 from parse_resume import Resume
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request
+from llm import _parseResume
 load_dotenv()
+
+global parsed_resume
+parsed_resume=pd.read_csv("parsed_resumes.csv")
 
 app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] ="./uploaded_resume/"
@@ -23,6 +27,7 @@ def recommend_candidate():
 
 @app.route('/parse_resume', methods=['POST'])
 def upload():
+    global parsed_resume
     # Check if a file was uploaded
     if 'pdf_file' in request.files:
         saved_pdf_name = 'uploaded_resume.pdf'
@@ -34,19 +39,8 @@ def upload():
         pdf_path = os.path.join(app.config['SAVED_PDF_PATH'],saved_pdf_name)
         prompt = Resume(pdf_path)._createPrompt().replace('   ','')
         response = _parseResume(prompt)
+        parsed_resume.loc[len(parsed_resume),:]=response
         return response
-    
-def _parseResume(prompt, n=3,engine ='text-davinci-003'):
-    openai.api_key= os.getenv('OPENAI_KEY')
-    completions = openai.Completion.create(
-            engine=engine,
-            prompt=prompt,
-            max_tokens=2048,
-            n=1,
-            temperature=0.01,
-        )
-    answer = completions.choices[0]['text'].replace('.','\n\n')
-    return answer
 
 if __name__=="__main__":
     app.run(debug=False, port=5001)
