@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="static/css/parse_resume.css">
+    <title>Parse resume</title>
+</head>
+<body>
+    <div class="page">
+        <div class="container">
+            <div class="field">
+                <div class="centerer">
+                    <button class='glowing-btn' onclick="window.location='/'"><span class='glowing-txt'>Homepage</span></button>
+                </div>
+            </div>            
+            <form name="parse_resume" class="formclass" enctype="multipart/form-data" action="/parse_resume" method="post">
+
+                <div class="field">
+                    <div class="label">
+                        <input type="file" name="file" id="file" accept=".pdf" required>
+                    </div>
+                    <div class="box">  
+                        <button class='glowing-btn'><span onclick="parse_resume.submit()" class='glowing-txt'>Parse resume</span></button>   
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="container">
+            <div class="field">
+                <div class="label">
+                    {% if response %}
+                    <div class="container">
+                        <div class="formclass">
+                            <div class="field">
+                                <div class="label">
+                                    <label for="name"><span class='glowing-txt'>Name:</span></label>
+                                </div>
+                                <div class="box">     
+                                    <textarea id="name" data-autosize-input='{ "space": 40 }' name="name" onkeyup="adjustTextareaHeight('name')" required>{{response.name}}</textarea>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="label">
+                                    <label for="phone"><span class='glowing-txt'>Phone no.:</span></label>
+                                </div>
+                                <div class="box">     
+                                    <textarea id="phone" data-autosize-input='{ "space": 40 }' name="phone" onkeyup="adjustTextareaHeight('phone')" required>{{response.phone}}</textarea>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="label">
+                                    <label for="email"><span class='glowing-txt'>Email ID:</span></label>
+                                </div>
+                                <div class="box">     
+                                    <textarea id="email" data-autosize-input='{ "space": 40 }' name="email" onkeyup="adjustTextareaHeight('email')" required>{{response.email}}</textarea>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="label">
+                                    <label for="skills"><span class='glowing-txt'>Skills:</span></label>
+                                </div>
+                                <div class="box">     
+                                    <textarea id="skills" data-autosize-input='{ "space": 40 }' name="skills" onkeyup="adjustTextareaHeight('skills')" required>{{response.skills}}</textarea>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="label">
+                                    <label for="past_exp"><span class='glowing-txt'>Past job experience:</span></label>
+                                </div>
+                                <div class="box">     
+                                    <textarea id="past_exp" data-autosize-input='{ "space": 40 }' name="past_exp" onkeyup="adjustTextareaHeight('past_exp')" required>{{response.past_exp}}</textarea>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="label">
+                                    <label for="education"><span class='glowing-txt'>Educational qualifications:</span></label>
+                                </div>
+                                <div class="box">     
+                                    <textarea id="education" data-autosize-input='{ "space": 40 }' name="education" onkeyup="adjustTextareaHeight('education')" required>{{response.education}}</textarea>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="label">
+                                    <label for="certifications"><span class='glowing-txt'>Certifications:</span></label>
+                                </div>
+                                <div class="box">     
+                                    <textarea id="certifications" data-autosize-input='{ "space": 40 }' name="certifications" onkeyup="adjustTextareaHeight('certifications')" required>{{response.certifications}}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="centerer">
+                        <button class='glowing-btn' onclick="save_parsed_resume()"><span class='glowing-txt'>Save parsed resume</span></button>
+                    </div>
+
+                    {% else %}
+                        Waiting for you to upload resume ...
+                    {% endif %}    
+                </div>
+            </div>
+        </div>
+    </div>
+    </body>
+    <script src="static/scripts/parse_resume.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</body>
+</html>

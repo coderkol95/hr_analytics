@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request
-from llm import generate_jd
+from llm import generate_jd, parseResume
+import os
+import pandas as pd
 
 app = Flask(__name__)
 
@@ -32,8 +34,27 @@ def create_JD():
 def recommend_candidate():
     return render_template("recommend_candidate.html")
 
-@app.route("/parse_resume")
+@app.route("/parse_resume", methods=['GET','POST'])
 def parse_resume():
+    if request.method=="POST":
+        file = request.files['file']
+        pdf_path = 'uploads/' + file.filename
+        file.save(pdf_path)
+        
+        response = parseResume(pdf_path)
+
+        parsed_resume=pd.read_csv("parsed_resumes.csv")
+        
+        if response['name'] not in list(parsed_resume['Name'].values):
+            parsed_resume.loc[len(parsed_resume),:] = [response['name'], response['phone'], response['email'], response['skills'], response['past_exp'], response['education'], response['certifications']]
+        
+        else:
+            parsed_resume.loc[parsed_resume['name']==response['name'],:] = [response['name'], response['phone'], response['email'], response['skills'], response['past_exp'], response['education'], response['certifications']]
+
+        parsed_resume.to_csv('parsed_resumes.csv',index=False)
+        
+        return render_template("parse_resume.html", response=response)
+
     return render_template("parse_resume.html")
 
 @app.route("/save_job_desc", methods=['GET','POST'])

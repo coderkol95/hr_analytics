@@ -1,13 +1,16 @@
 import openai
-import pinecone
 import os
+from parse_resume import Resume
+import pandas as pd
+import re
 from dotenv import load_dotenv
 load_dotenv()
-openai.api_key = os.environ.get("OPENAI_API_KEY")
+
 MODEL="gpt-3.5-turbo"
+openai.api_key = os.environ.get("OPENAI_API_KEY")
 
 def generate_jd(metadata,designation,min_education,experience,responsibilities,techstack,other_tools, role_type, role_location, requisition_id):
-
+    
     response = openai.ChatCompletion.create(
     model=MODEL,
     messages=[
@@ -30,3 +33,32 @@ def generate_jd(metadata,designation,min_education,experience,responsibilities,t
     )
 
     return response.choices[0]['message']['content']
+
+def parseResume(pdf_path, n=3,engine ='text-davinci-003'):
+    
+    prompt = Resume(pdf_path)._createPrompt().replace('   ','')
+    completions = openai.Completion.create(
+            engine=engine,
+            prompt=prompt,
+            max_tokens=2048,
+            n=1,
+            temperature=0.01,
+        )
+    answer = completions.choices[0]['text'].replace('.','\n\n')
+    resume_data=[x.split(':') for x in answer.split("\n\n") if x!='']
+    resume_dict=dict(zip([x[0] for x in resume_data],[x[1:] for x in resume_data]))
+    name = resume_dict['Name'][0].strip()
+    phone = resume_dict['Contact Number'][0].strip()
+    email = resume_dict['Email'][0].strip()
+    skills = resume_dict['Skills'][0].strip()
+    past_exp = resume_dict['Past Job Experience'][0].strip()
+    education = [re.sub('\n','', x) for x in resume_dict['Education']]
+    certifications = [re.sub('\n','', x) for x in resume_dict['Certifications']]
+
+    return {'name':name,
+            'phone':phone,
+            'email':email,
+            'skills':skills,
+            'past_exp':past_exp,
+            'education':education,
+            'certifications':certifications}
