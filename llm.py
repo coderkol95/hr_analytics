@@ -2,12 +2,14 @@ import openai
 import os
 from parse_resume import Resume
 import pandas as pd
+import pymongo
 import re
 from dotenv import load_dotenv
 load_dotenv()
 
 MODEL="gpt-3.5-turbo"
 openai.api_key = os.environ.get("OPENAI_API_KEY")
+MongoDB_URI = os.environ.get("MONGO_URI")
 
 def generate_jd(metadata,designation,min_education,experience,responsibilities,techstack,other_tools, role_type, role_location, requisition_id):
     
@@ -55,10 +57,20 @@ def parseResume(pdf_path, n=3,engine ='text-davinci-003'):
     education = [re.sub('\n','', x) for x in resume_dict['Education']]
     certifications = [re.sub('\n','', x) for x in resume_dict['Certifications']]
 
-    return {'name':name,
+    output =  {'name':name,
             'phone':phone,
             'email':email,
             'skills':skills,
             'past_exp':past_exp,
             'education':education,
             'certifications':certifications}
+    
+    ### Mongo db Integration for storing the Data
+    client = pymongo.MongoClient(MongoDB_URI)
+    collection = client['Resume']['Resume']
+    collection.insert_one(output)
+    data=collection.find()   ## will fetch all the data
+    df = pd.DataFrame(data)
+    ### saving all the resume parsed so far in one csv
+    df.to_csv('parsed_csv_mongo.csv')  
+    return output
