@@ -30,9 +30,13 @@ def create_JD():
 
     return render_template("create_JD.html", generate_jd=None)
 
-@app.route("/recommend_candidate")
+@app.route("/recommend_candidate", methods=['POST'])
 def recommend_candidate():
-    return render_template("recommend_candidate.html")
+    # if request.method=="POST":
+    #     question = request.files['text']
+    #     resume_csv_path = ""  ## Specify the path
+    #     suitable_candidate_indices = CandidateMatch(resume_csv_path).getSuitableCandidate(question)
+        return render_template("recommend_candidate.html")
 
 @app.route("/parse_resume", methods=['GET','POST'])
 def parse_resume():
