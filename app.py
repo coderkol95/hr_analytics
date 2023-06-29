@@ -9,6 +9,11 @@ app = Flask(__name__)
 def home():
     return render_template("home.html")
 
+@app.route("/available_candidates")
+def available_candidates():
+    parsed_resumes = pd.read_csv("./parsed_resumes.csv")
+    return render_template("available_candidates.html", table=parsed_resumes.to_html(index=False))
+
 @app.route("/create_JD", methods=['GET','POST'])
 def create_JD():
 
@@ -36,12 +41,14 @@ def recommend_candidate():
     job_roles=list(parsed_resumes['Job_Role'].unique())
     if request.method=="POST":
         job_desc = request.form['job_desc']
-        selected_roles = request.form['selected_values']
-
+        try:
+            selected_roles = request.form.getlist('selected_values')
+        except:
+            selected_roles=["Data scientist"]
         score_results=score_candidates(parsed_resumes, job_desc, selected_roles)
-        print(score_results)
+        # print(score_results)  
         # Process results for sending to frontend
-        return render_template("recommend_candidate.html") #, recommendations, scores)
+        return render_template("recommend_candidate.html", job_roles=job_roles) #, recommendations, scores)
 
     return render_template("recommend_candidate.html", job_roles=job_roles)
 

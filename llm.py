@@ -99,12 +99,13 @@ def _identify_skillsets_from_jd(jd):
     return ",".join(skills)
 
 def _identify_candidates_by_job_role(parsed_resumes,selected_roles):
-    
-    candidates_to_look_at = parsed_resumes.loc[parsed_resumes['Job_Role'] == selected_roles,['Skillsets','Certifications','Education','YOE']].values
+    print(selected_roles)
+    # candidates_to_look_at = parsed_resumes.loc[parsed_resumes['Job_Role'] == selected_roles,['Skillsets','Certifications','Education','YOE']].values
+    candidates_to_look_at = parsed_resumes.loc[parsed_resumes['Job_Role'].isin(selected_roles),['Name','Skillsets','Certifications','Education','YOE']].values
     candidate_data=""""""
-    for i, v in enumerate(candidates_to_look_at.values):
-        # candidate_data+=
-        candidate_data+=str(i+1)+". "+v[0]+" :: "+"; ".join(v[1:])+" \n"
+    print(candidate_data)
+    for i, v in enumerate(candidates_to_look_at):
+        candidate_data+=str(i+1)+". "+str(v[0])+" :: "+"; ".join(str(x) for x in v[1:])+" \n"
     return candidate_data
 
 def score_candidates(parsed_resumes,job_desc,selected_roles):
@@ -113,13 +114,14 @@ def score_candidates(parsed_resumes,job_desc,selected_roles):
     candidate_data = _identify_candidates_by_job_role(parsed_resumes,selected_roles)
 
     prompt = f"""
-   You are a professional recruiter for technical companies. You will be given skills and job roles to evaluate different candidates given their names, skillsets, certifications, education and past job experience. Your job will be mention the skills which are there for each candidate and to assign scores between 1 to 100 to against each candidate. The candidates with the most relevant skillsets to the job role  shall be given highest score.  The skills to check are within %. The job role is given within $ delimiter and the details of candidates are given within the # delimiter. The scores shall be assigned just after the list of identified skills for each candidate. Start only with the answer. Don't justify the reason behind the scoring.
+    You are a professional recruiter for technical companies. You will be given skills and job roles to evaluate different candidates given their names, skillsets, certifications, education and past job experience. Your job will be mention the skills which are there for each candidate and to assign scores between 1 to 100 to against each candidate. The candidates with the most relevant skillsets to the job role  shall be given highest score.  The skills to check are within %. The job role is given within $ delimiter and the details of candidates are given within the # delimiter. The scores shall be assigned just after the list of identified skills for each candidate. Start only with the answer. Don't justify the reason behind the scoring.
 
     %{identified_skillsets_from_jd}%
 
     $ The job role is of {",".join(selected_roles)} $
 
-    #{candidate_data}#"""
+    #{candidate_data}#
+    Return the name,matched skills and score"""
 
     response = openai.ChatCompletion.create(
     model="gpt-3.5-turbo",
@@ -131,13 +133,12 @@ def score_candidates(parsed_resumes,job_desc,selected_roles):
     )
     answer = response.choices[0]['message']['content']
 
-    eachline=[x.split('\n') for x in answer.split("\n\n")]
+    eachline=[x.split('-') for x in answer.split("\n")]
     eachline_v2=[[y.split(":") for y in x] for x in eachline]
+
     recom=pd.DataFrame(eachline_v2, columns=["Name","Found skills","Score"])
-    recom=recom.applymap(lambda x: ''.join(x))
-    recom['Found skills']=recom['Found skills'].apply(lambda x: x[7:])
-    recom['Score']=recom['Score'].apply(lambda x: x[6:])
+    # recom=recom.applymap(lambda x: ''.join(x))
+    # recom['Found skills']=recom['Found skills'].apply(lambda x: "".join(x))
+    # recom['Score']=recom['Score'].apply(lambda x: x[6:])
 
     return recom
-
-    

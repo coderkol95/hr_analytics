@@ -1,0 +1,36 @@
+About the Company and Role:
+Our company is a leading technology company specializing in cutting-edge solutions and innovative products. As a Data Scientist, you will join our dynamic and highly skilled team dedicated to driving data-driven insights and delivering impactful solutions. In this role, you will have the opportunity to work with cross-functional teams, collaborate on challenging projects, and contribute to the growth and success of the company.
+
+Designation: Data Scientist
+
+Minimum Educational Qualifications:
+
+Bachelor's degree in Computer Science, Statistics, Mathematics, or a related field. A strong understanding of statistical concepts and algorithms is essential.
+Minimum Years of Experience Required: 4+ years of relevant industry experience in data science, machine learning, or a related field.
+
+Responsibilities:
+
+Create Models: Develop and implement machine learning models and algorithms to solve complex business problems. This involves data exploration, feature engineering, model selection, and evaluation.
+Data Wrangling: Gather, clean, preprocess, and transform data from various sources. Perform data analysis and ensure data quality for effective model training and inference.
+Model Maintenance: Continuously monitor, evaluate, and refine models to improve performance and adapt to changing data patterns. Implement best practices for model versioning and deployment.
+MLOPS: Collaborate with DevOps and engineering teams to build scalable and automated machine learning pipelines. Implement tools and frameworks for model deployment, monitoring, and maintenance.
+Technology Stack Experience Required:
+
+Python: Proficiency in Python programming language for data manipulation, analysis, and modeling. Experience with Pandas and Numpy libraries for efficient data processing and numerical operations.
+Operating Systems (OS): Familiarity with various operating systems (e.g., Linux, Windows) and the command-line interface for managing and executing data science workflows.
+JSON: Knowledge of JSON (JavaScript Object Notation) for data interchange and configuration purposes.
+Role Type: Full-Time Employment (FTE)
+
+Role Location: Bengaluru, India
+
+Requisition ID: 11673393
+
+Other Information to Include in the Resume:
+
+Proficiency in Python data science libraries (e.g., Pandas, Numpy) for data manipulation and analysis.
+Strong analytical and problem-solving skills.
+Excellent communication and collaboration abilities.
+Experience in data visualization and storytelling.
+Familiarity with machine learning frameworks (e.g., TensorFlow, PyTorch) is a plus.
+Knowledge of SQL and databases is beneficial.
+Advanced degree (Master's or Ph.D.) in a related field is preferred.
