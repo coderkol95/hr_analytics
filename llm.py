@@ -2,14 +2,15 @@ import openai
 import os
 from parse_resume import Resume
 import pandas as pd
-import pymongo
+# import pymongo
 import re
+import json
 from dotenv import load_dotenv
 load_dotenv()
 
 MODEL="gpt-3.5-turbo"
 openai.api_key = os.environ.get("OPENAI_API_KEY")
-MongoDB_URI = os.environ.get("MONGO_URI")
+# MongoDB_URI = os.environ.get("MONGO_URI")
 
 def generate_jd(metadata,designation,min_education,experience,responsibilities,techstack,other_tools, role_type, role_location, requisition_id):
     
@@ -46,18 +47,19 @@ def parseResume(pdf_path, n=3,engine ='text-davinci-003'):
             n=1,
             temperature=0.01,
         )
-    answer = completions.choices[0]['text'].replace('.','\n\n')
-    resume_data=[x.split(':') for x in answer.split("\n\n") if x!='']
-    resume_dict=dict(zip([x[0] for x in resume_data],[x[1:] for x in resume_data]))
-    name = resume_dict['Name'][0].strip()
-    phone = resume_dict['Contact Number'][0].strip()
-    email = resume_dict['Email'][0].strip()
-    skills = resume_dict['Skills'][0].strip()
-    past_exp = resume_dict['Past Job Experience'][0].strip()
-    education = [re.sub('\n','', x) for x in resume_dict['Education']]
-    certifications = [re.sub('\n','', x) for x in resume_dict['Certifications']]
+    answer = completions.choices[0]['text']
+    # resume_data=[x.split(':') for x in answer.split("\n\n") if x!='']
+    # resume_dict=dict(zip([x[0] for x in resume_data],[x[1:] for x in resume_data]))
+    resume_dict=json.loads(answer[10:])
+    name = resume_dict['name']
+    phone = resume_dict['contact_number']
+    email = resume_dict['email_id']
+    skills = resume_dict['technical_skillsets']
+    past_exp = resume_dict['past_job_experience']
+    education = resume_dict['educational_background']
+    certifications = resume_dict['certifications']
 
-    output =  {'name':name,
+    return {'name':name,
             'phone':phone,
             'email':email,
             'skills':skills,
@@ -65,12 +67,12 @@ def parseResume(pdf_path, n=3,engine ='text-davinci-003'):
             'education':education,
             'certifications':certifications}
     
-    ### Mongo db Integration for storing the Data
-    client = pymongo.MongoClient(MongoDB_URI)
-    collection = client['Resume']['Resume']
-    collection.insert_one(output)
-    data=collection.find()   ## will fetch all the data
-    df = pd.DataFrame(data)
-    ### saving all the resume parsed so far in one csv
-    df.to_csv('parsed_csv_mongo.csv')  
-    return output
+    # ### Mongo db Integration for storing the Data
+    # client = pymongo.MongoClient(MongoDB_URI)
+    # collection = client['Resume']['Resume']
+    # collection.insert_one(output)
+    # data=collection.find()   ## will fetch all the data
+    # df = pd.DataFrame(data)
+    # ### saving all the resume parsed so far in one csv
+    # df.to_csv('parsed_csv_mongo.csv')  
+    # return output

@@ -45,17 +45,24 @@ def parse_resume():
 
         parsed_resume=pd.read_csv("parsed_resumes.csv")
         
-        if response['name'] not in list(parsed_resume['Name'].values):
-            parsed_resume.loc[len(parsed_resume),:] = [response['name'], response['phone'], response['email'], response['skills'], response['past_exp'], response['education'], response['certifications']]
-        
-        else:
-            parsed_resume.loc[parsed_resume['name']==response['name'],:] = [response['name'], response['phone'], response['email'], response['skills'], response['past_exp'], response['education'], response['certifications']]
-
         parsed_resume.to_csv('parsed_resumes.csv',index=False)
         
         return render_template("parse_resume.html", response=response)
 
     return render_template("parse_resume.html")
+
+@app.route("/save_parsed_resume", methods=["POST"])
+def save_parsed_resume():
+
+    # Currently just adding a new row every time a resume is parsed
+    parsed_resume=pd.read_csv('./parsed_resumes.csv')
+    response=request.get_json()
+    if response['name'] not in list(parsed_resume['Name'].values):
+        parsed_resume.loc[len(parsed_resume),:] = [response['name'], response['phone'], response['email'], response['skills'], response['past_exp'], response['education'], response['certifications']]
+    else:
+        parsed_resume.loc[parsed_resume['Name']==response['name'],:] = [response['name'], response['phone'], response['email'], response['skills'], response['past_exp'], response['education'], response['certifications']]
+    parsed_resume.to_csv('./parsed_resumes.csv', index=False)
+    return 'OK', 200
 
 @app.route("/save_job_desc", methods=['GET','POST'])
 def save_job_desc():

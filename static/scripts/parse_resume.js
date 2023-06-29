@@ -6,13 +6,23 @@ function adjustTextareaHeight(ident) {
 
 function save_parsed_resume(i) {
 
-// Send all fields
-  var job_desc = document.getElementById("requisition_id");
-  $.ajax({
+
+
+  var textareaValues = {
+    'name': $('#name').val(),
+    'phone': $('#phone').val(),
+    'email': $('#email').val(),
+    'skills': $('#skills').val(),
+    'education': $('#education').val(),
+    'past_exp': $('#past_exp').val(),
+    'certifications': $('#certifications').val()
+};
+
+$.ajax({
+    url: '/save_parsed_resume',
     type: 'POST',
-    url: '/parse_resume',
-    data: JSON.stringify(job_desc.value),
+    data: JSON.stringify(textareaValues),
     contentType: "application/json",
     dataType: 'json'
-  });
+});
   }
