@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from llm import generate_jd, parseResume
+from llm import generate_jd, parseResume, score_candidates
 import os
 import pandas as pd
 
@@ -32,12 +32,18 @@ def create_JD():
 
 @app.route("/recommend_candidate", methods=['GET','POST'])
 def recommend_candidate():
-       
-    # if request.method=="POST":
-    #     question = request.files['job_desc']
-    #     resume_csv_path = ""  ## Specify the path
-    #     suitable_candidate_indices = CandidateMatch(resume_csv_path).getSuitableCandidate(question)
-        return render_template("recommend_candidate.html")
+    parsed_resumes=pd.read_csv('./parsed_resumes.csv')
+    job_roles=list(parsed_resumes['Job_Role'].unique())
+    if request.method=="POST":
+        job_desc = request.form['job_desc']
+        selected_roles = request.form['selected_values']
+
+        score_results=score_candidates(parsed_resumes, job_desc, selected_roles)
+        print(score_results)
+        # Process results for sending to frontend
+        return render_template("recommend_candidate.html") #, recommendations, scores)
+
+    return render_template("recommend_candidate.html", job_roles=job_roles)
 
 @app.route("/parse_resume", methods=['GET','POST'])
 def parse_resume():

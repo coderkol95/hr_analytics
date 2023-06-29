@@ -14,16 +14,23 @@
                     <button class='glowing-btn' onclick="window.location='/'"><span class='glowing-txt'>Homepage</span></button>
                 </div>
             </div>            
-            <form name="recommend_candidate" class="formclass" action="/recommend_candidate" method="post">
+            <form name="recommend_candidate" class="formclass" enctype="multipart/form-data" action="/recommend_candidate" method="post">
 
                 <div class="field">
                     <div class="label">
                         <textarea id="job_desc" data-autosize-input='{ "space": 40 }' name="job_desc" onkeyup="adjustTextareaHeight('job_desc')" required></textarea>
                     </div>
-                    <div class="box">  
-                        <button class='glowing-btn'><span onclick="recommend_candidate.submit()" class='glowing-txt'>Get recommendations</span></button>   
+                    <div class="box">
+                        {% for value in job_roles %}
+                        <input type="checkbox" class='glowing-btn' name="selected_values" value="{{ value }}"><span style="color: aliceblue;">{{ value }}</span><br>
+                        {% endfor %}
                     </div>
                 </div>
+                <div class="field">
+                    <div class="centerer">
+                        <button class='glowing-btn'><span onclick="recommend_candidate.submit()" class='glowing-txt'>Get recommendations</span></button>   
+                    </div>
+                </div>  
             </form>
         </div>
 
