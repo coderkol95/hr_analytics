@@ -41,7 +41,7 @@ def parse_resume():
         pdf_path = 'uploads/' + file.filename
         file.save(pdf_path)
         
-        response = parseResume(pdf_path)
+        response = parseResume(pdf_path)  ## dictionary
 
         parsed_resume=pd.read_csv("parsed_resumes.csv")
         
