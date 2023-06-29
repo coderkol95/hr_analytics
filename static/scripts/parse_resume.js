@@ -16,7 +16,8 @@ function save_parsed_resume(i) {
     'education': $('#education').val(),
     'past_exp': $('#past_exp').val(),
     'certifications': $('#certifications').val(),
-    'job_role': $('#job_role').val()
+    'job_role': $('#job_role').val(),
+    'yoe': $('#yoe').val()
 };
 
 $.ajax({

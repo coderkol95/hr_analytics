@@ -63,9 +63,9 @@ def save_parsed_resume():
     parsed_resume=pd.read_csv('./parsed_resumes.csv')
     response=request.get_json()
     if response['name'] not in list(parsed_resume['Name'].values):
-        parsed_resume.loc[len(parsed_resume),:] = [response['name'], response['phone'], response['email'], response['skills'], response['past_exp'], response['education'], response['certifications'], response['job_role']]
+        parsed_resume.loc[len(parsed_resume),:] = [response['name'], response['phone'], response['email'], response['skills'], response['past_exp'], response['education'], response['certifications'], response['job_role'], response['yoe']]
     else:
-        parsed_resume.loc[parsed_resume['Name']==response['name'],:] = [response['name'], response['phone'], response['email'], response['skills'], response['past_exp'], response['education'], response['certifications'], response['job_role']]
+        parsed_resume.loc[parsed_resume['Name']==response['name'],:] = [response['name'], response['phone'], response['email'], response['skills'], response['past_exp'], response['education'], response['certifications'], response['job_role'], response['yoe']]
     parsed_resume.to_csv('./parsed_resumes.csv', index=False)
     return 'OK', 200
 
