@@ -44,7 +44,7 @@ class Resume:
                 Once you find them out you need to show them in pointwise manner.  
                 Keep it short and precise. 
                 Do not generate anything unnecessary and Do not generate anything on your own that is not in the context.
-                Return the output in JSON format where name, contact_number, email_id, linkedIn_id, educational_background, technical_skillsets, past_job_experience, certifications, projects, publication, awards shall be the key.
+                Return the output in JSON format where name, contact_number, email_id, linkedIn_id, educational_background, identified_job_role, technical_skillsets, past_job_experience, certifications, projects, publication, awards shall be the key.
                 If any of the key information is not found from the context, return Not Mentioned in Resume."""
 
         prompt+=prompt+"\n\n"+"#"+resume_content+"#"

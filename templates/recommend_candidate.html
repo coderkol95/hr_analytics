@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="static/css/recommend_candidate.css">
+    <title>Candidate recommendation</title>
+</head>
+<body>
+    <div class="page">
+        <div class="container">
+            <div class="field">
+                <div class="centerer">
+                    <button class='glowing-btn' onclick="window.location='/'"><span class='glowing-txt'>Homepage</span></button>
+                </div>
+            </div>            
+            <form name="recommend_candidate" class="formclass" action="/recommend_candidate" method="post">
+
+                <div class="field">
+                    <div class="label">
+                        <textarea id="job_desc" data-autosize-input='{ "space": 40 }' name="job_desc" onkeyup="adjustTextareaHeight('job_desc')" required></textarea>
+                    </div>
+                    <div class="box">  
+                        <button class='glowing-btn'><span onclick="recommend_candidate.submit()" class='glowing-txt'>Get recommendations</span></button>   
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="container">
+            <div class="field">
+                <div class="label">
+                    {% if response %}
+
+                    {% else %}
+                        Waiting for you to upload job description ...
+                    {% endif %}    
+                </div>
+            </div>
+        </div>
+    </div>
+    </body>
+    <script src="static/scripts/recommend_candidate.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</body>
+</html>

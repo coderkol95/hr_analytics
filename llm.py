@@ -58,6 +58,7 @@ def parseResume(pdf_path, n=3,engine ='text-davinci-003'):
     past_exp = resume_dict['past_job_experience']
     education = resume_dict['educational_background']
     certifications = resume_dict['certifications']
+    job_role = resume_dict['identified_job_role']
 
     return {'name':name,
             'phone':phone,
@@ -65,7 +66,8 @@ def parseResume(pdf_path, n=3,engine ='text-davinci-003'):
             'skills':skills,
             'past_exp':past_exp,
             'education':education,
-            'certifications':certifications}
+            'certifications':certifications,
+            'job_role':job_role}
     
     # ### Mongo db Integration for storing the Data
     # client = pymongo.MongoClient(MongoDB_URI)
