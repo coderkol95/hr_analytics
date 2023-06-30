@@ -1,0 +1,14 @@
+metadata="We are a leading fintech company based out of Palo Alto, California. We facilitate more than a billion transactions daily. The D&A team monitors and flags fraudulent transactions. The team is looking for a data scientist who will help them sift through rich transaction data and build advanced systems to effectively mitigate fraudulent transactions."
+designation="Data scientist I"
+min_education="Bachelors in engineering/ mathematics/ statistics or masters in STEM"
+experience="4"
+responsibilities="""a. Help data ingestion from different sources like streaming data, third party data, transaction data into GCP
+b. Build executive facing dashboards by mining the data. 
+c. Build fraud detection models in GCP using Kubeflow.
+d. Deploy and monitor models at scale.
+e. Present and establish findings to stakeholders."""
+techstack="Python/R/C++, Google BigTable, Kubeflow, Apache Spark, Jupyter, Tensorflow, pySpark, neural networks"
+other_tools=""
+role_type="Permanent"
+role_location="Bangalore/Hyderabad"
+requisition_id="1234"

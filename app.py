@@ -45,10 +45,11 @@ def recommend_candidate():
             selected_roles = request.form.getlist('selected_values')
         except:
             selected_roles=["Data scientist"]
-        score_results=score_candidates(parsed_resumes, job_desc, selected_roles)
+        scores=score_candidates(parsed_resumes, job_desc, selected_roles)
         # print(score_results)  
         # Process results for sending to frontend
-        return render_template("recommend_candidate.html", job_roles=job_roles) #, recommendations, scores)
+        print(scores)
+        return render_template("recommend_candidate.html", job_roles=job_roles, scores=scores) #, recommendations, scores)
 
     return render_template("recommend_candidate.html", job_roles=job_roles)
 

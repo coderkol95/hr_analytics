@@ -38,8 +38,12 @@
         <div class="container">
             <div class="field">
                 <div class="label">
-                    {% if response %}
-
+                    {% if scores %}
+                        <div>
+                            {% for s in scores %}
+                            <span class="glowing-txt">{{s}}</span><br>
+                            {% endfor %}
+                        </div>
                     {% else %}
                         Waiting for you to upload job description ...
                     {% endif %}    

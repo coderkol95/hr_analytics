@@ -114,14 +114,19 @@ def score_candidates(parsed_resumes,job_desc,selected_roles):
     candidate_data = _identify_candidates_by_job_role(parsed_resumes,selected_roles)
 
     prompt = f"""
-    You are a professional recruiter for technical companies. You will be given skills and job roles to evaluate different candidates given their names, skillsets, certifications, education and past job experience. Your job will be mention the skills which are there for each candidate and to assign scores between 1 to 100 to against each candidate. The candidates with the most relevant skillsets to the job role  shall be given highest score.  The skills to check are within %. The job role is given within $ delimiter and the details of candidates are given within the # delimiter. The scores shall be assigned just after the list of identified skills for each candidate. Start only with the answer. Don't justify the reason behind the scoring.
+    You are a professional recruiter for technical companies. You will be given skills and job roles to evaluate different candidates given their 
+    names, skillsets, certifications, education and past job experience. Your job will be mention the skills which are there for each candidate and 
+    to assign scores between 1 to 100 to against each candidate. The candidates with the most relevant skillsets to the job role  shall be given 
+    highest score.  The skills to check are within %. The job role is given within $ delimiter and the details of candidates are given within the # 
+    delimiter. The scores shall be assigned just after the list of identified skills for each candidate. Start only with the answer. Don't justify 
+    the reason behind the scoring.
 
     %{identified_skillsets_from_jd}%
 
     $ The job role is of {",".join(selected_roles)} $
 
     #{candidate_data}#
-    Return the name,matched skills and score"""
+    Return the name,score and matched skills"""
 
     response = openai.ChatCompletion.create(
     model="gpt-3.5-turbo",
@@ -133,12 +138,12 @@ def score_candidates(parsed_resumes,job_desc,selected_roles):
     )
     answer = response.choices[0]['message']['content']
 
-    eachline=[x.split('-') for x in answer.split("\n")]
-    eachline_v2=[[y.split(":") for y in x] for x in eachline]
+    # eachline=[x.split('-') for x in answer.split("\n")]
+    # eachline_v2=[[y.split(":") for y in x] for x in eachline]
 
-    recom=pd.DataFrame(eachline_v2, columns=["Name","Found skills","Score"])
+    # recom=pd.DataFrame(eachline_v2, columns=["Name","Found skills","Score"])
     # recom=recom.applymap(lambda x: ''.join(x))
     # recom['Found skills']=recom['Found skills'].apply(lambda x: "".join(x))
     # recom['Score']=recom['Score'].apply(lambda x: x[6:])
 
-    return recom
+    return answer.split("\n")
