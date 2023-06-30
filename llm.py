@@ -101,7 +101,7 @@ def _identify_skillsets_from_jd(jd):
 def _identify_candidates_by_job_role(parsed_resumes,selected_roles):
     print(selected_roles)
     # candidates_to_look_at = parsed_resumes.loc[parsed_resumes['Job_Role'] == selected_roles,['Skillsets','Certifications','Education','YOE']].values
-    candidates_to_look_at = parsed_resumes.loc[parsed_resumes['Job_Role'].isin(selected_roles),['Name','Skillsets','Certifications','Education','YOE']].values
+    candidates_to_look_at = parsed_resumes.loc[parsed_resumes['Job_Role'].isin(selected_roles),['Name','Skillsets']].values
     candidate_data=""""""
     print(candidate_data)
     for i, v in enumerate(candidates_to_look_at):
@@ -113,20 +113,20 @@ def score_candidates(parsed_resumes,job_desc,selected_roles):
     identified_skillsets_from_jd=_identify_skillsets_from_jd(job_desc)
     candidate_data = _identify_candidates_by_job_role(parsed_resumes,selected_roles)
 
+    # job_roles = {",".join(selected_roles)}  # Removed from prompt
+
+
     prompt = f"""
-    You are a professional recruiter for technical companies. You will be given skills and job roles to evaluate different candidates given their 
-    names, skillsets, certifications, education and past job experience. Your job will be mention the skills which are there for each candidate and 
-    to assign scores between 1 to 100 to against each candidate. The candidates with the most relevant skillsets to the job role  shall be given 
-    highest score.  The skills to check are within %. The job role is given within $ delimiter and the details of candidates are given within the # 
-    delimiter. The scores shall be assigned just after the list of identified skills for each candidate. Start only with the answer. Don't justify 
-    the reason behind the scoring.
+    You are a professional recruiter for technical companies. You will be given skills in 'skills' to evaluate different candidates given their 
+    names and skillsets. Your job will be to mention only the candidate skills which are there in 'skills' and to assign scores between 1 to 100 
+    against each candidate on the basis of matching skills only. The candidates with the most matching skillsets shall be given the highest score.
+    The details of candidates are given in 'candidates' item-wise. The scores shall be assigned before the list of identified skills for each 
+    candidate. Start only with the answer. Don't justify the reason behind the scoring.
 
-    %{identified_skillsets_from_jd}%
+    skills = [{identified_skillsets_from_jd}]
+    candidates = {candidate_data}
 
-    $ The job role is of {",".join(selected_roles)} $
-
-    #{candidate_data}#
-    Return the name,score and matched skills"""
+    Print the name, score and matching skills for each candidate"""
 
     response = openai.ChatCompletion.create(
     model="gpt-3.5-turbo",
