@@ -10,14 +10,13 @@
   box-sizing: border-box;
 }
 
-
 body {
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: black;
-    color: aliceblue;
+    background: rgb(255, 255, 255);
+    color: rgb(3, 3, 3);
   }
 th {
     display: table-cell;
@@ -100,7 +99,7 @@ text-align: center;
     opacity: 0.7;
     filter: blur(1em);
     transform: translateY(120%) rotateX(95deg) scale(1, 0.35);
-    background: var(--glow-color);
+    /* background: var(--glow-color); */
     pointer-events: none;
   }
   
