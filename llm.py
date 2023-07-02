@@ -71,16 +71,6 @@ def parseResume(pdf_path):
             'certifications':certifications,
             'job_role':job_role,
             'yoe':years_of_experience}
-    
-    # ### Mongo db Integration for storing the Data
-    # client = pymongo.MongoClient(MongoDB_URI)
-    # collection = client['Resume']['Resume']
-    # collection.insert_one(output)
-    # data=collection.find()   ## will fetch all the data
-    # df = pd.DataFrame(data)
-    # ### saving all the resume parsed so far in one csv
-    # df.to_csv('parsed_csv_mongo.csv')  
-    # return output
 
 def _identify_skillsets_from_jd(jd):
 
@@ -101,7 +91,7 @@ def _identify_skillsets_from_jd(jd):
 def _identify_candidates_by_job_role(parsed_resumes,selected_roles):
     print(selected_roles)
     # candidates_to_look_at = parsed_resumes.loc[parsed_resumes['Job_Role'] == selected_roles,['Skillsets','Certifications','Education','YOE']].values
-    candidates_to_look_at = parsed_resumes.loc[parsed_resumes['Job_Role'].isin(selected_roles),['Name','Skillsets']].values
+    candidates_to_look_at = parsed_resumes.loc[parsed_resumes['job_role'].isin(selected_roles),['name','skills']].values
     candidate_data=""""""
     print(candidate_data)
     for i, v in enumerate(candidates_to_look_at):
