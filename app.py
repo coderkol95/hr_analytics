@@ -2,6 +2,8 @@ from flask import Flask, render_template, request
 from llm import generate_jd, parseResume, score_candidates
 import os
 import pymongo
+import warnings
+warnings.filterwarnings('ignore')
 from dotenv import load_dotenv
 import pandas as pd
 load_dotenv()
@@ -55,13 +57,11 @@ def recommend_candidate():
         job_desc = request.form['job_desc']
         try:
             selected_roles = request.form.getlist('selected_values')
+            best_candidates = score_candidates(job_desc, selected_roles)
+            return render_template("recommend_candidate.html", job_roles=job_roles, table=best_candidates.to_html(index=False))
         except:
-            selected_roles=["Data scientist"]
-        scores=score_candidates(parsed_resumes, job_desc, selected_roles)
-        # print(score_results)  
-        # Process results for sending to frontend
-        print(scores)
-        return render_template("recommend_candidate.html", job_roles=job_roles, scores=scores) #, recommendations, scores)
+            best_candidates = score_candidates(job_desc, job_roles)
+            return render_template("recommend_candidate.html", job_roles=job_roles, table=best_candidates.to_html(index=False))
 
     return render_template("recommend_candidate.html", job_roles=job_roles)
 
