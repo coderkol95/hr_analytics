@@ -16,11 +16,6 @@ class CandidateMatch:
         self.df = resume_data.loc[resume_data['job_role'].isin(job_role)].reset_index(drop=True)
         self.model = SentenceTransformer( model_name_or_path ='sentence-transformers/all-mpnet-base-v2')
 
-    # def filter_candidates_by_job_role(self):
-    #     # candidates_to_look_at = parsed_resumes.loc[parsed_resumes['Job_Role'] == selected_roles,['Skillsets','Certifications','Education','YOE']].values
-    #     filtered_candidates = self.df.loc[self.df['job_role'].isin(self.role)]
-    #     return filtered_candidates
-
     def recreate_df(self):
         df = self.df.copy()
         df['candidate_feature'] =  'Skills : '+ df['skills']+';'+\
