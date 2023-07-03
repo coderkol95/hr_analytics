@@ -1,7 +1,15 @@
 from flask import Flask, render_template, request
 from llm import generate_jd, parseResume, score_candidates
 import os
+import pymongo
+import warnings
+warnings.filterwarnings('ignore')
+from dotenv import load_dotenv
 import pandas as pd
+load_dotenv()
+
+## getting the mongoDB Collection: DataBase Name : Resume , Collection Name : Resume
+collection  = pymongo.MongoClient( os.getenv("MONGO_URI") )['Resume']['Resume']
 
 app = Flask(__name__)
 
@@ -11,7 +19,10 @@ def home():
 
 @app.route("/available_candidates")
 def available_candidates():
-    parsed_resumes = pd.read_csv("./parsed_resumes.csv")
+    global collection
+    data=collection.find({},{'_id':0}) 
+    parsed_resumes = pd.DataFrame(data)
+    # parsed_resumes = pd.read_csv("./parsed_resumes.csv") ## Not a best practice , just an alternative
     return render_template("available_candidates.html", table=parsed_resumes.to_html(index=False))
 
 @app.route("/create_JD", methods=['GET','POST'])
@@ -37,19 +48,20 @@ def create_JD():
 
 @app.route("/recommend_candidate", methods=['GET','POST'])
 def recommend_candidate():
-    parsed_resumes=pd.read_csv('./parsed_resumes.csv')
-    job_roles=list(parsed_resumes['Job_Role'].unique())
+    global collection
+    data=collection.find({},{'_id':0}) 
+    parsed_resumes = pd.DataFrame(data)
+    ## parsed_resumes=pd.read_csv('./parsed_resumes.csv') ## Not a best practice , just an alternative
+    job_roles=list(parsed_resumes['job_role'].unique())
     if request.method=="POST":
         job_desc = request.form['job_desc']
         try:
             selected_roles = request.form.getlist('selected_values')
+            best_candidates = score_candidates(job_desc, selected_roles)
+            return render_template("recommend_candidate.html", job_roles=job_roles, table=best_candidates.to_html(index=False))
         except:
-            selected_roles=["Data scientist"]
-        scores=score_candidates(parsed_resumes, job_desc, selected_roles)
-        # print(score_results)  
-        # Process results for sending to frontend
-        print(scores)
-        return render_template("recommend_candidate.html", job_roles=job_roles, scores=scores) #, recommendations, scores)
+            best_candidates = score_candidates(job_desc, job_roles)
+            return render_template("recommend_candidate.html", job_roles=job_roles, table=best_candidates.to_html(index=False))
 
     return render_template("recommend_candidate.html", job_roles=job_roles)
 
@@ -62,9 +74,8 @@ def parse_resume():
         
         response = parseResume(pdf_path)  ## dictionary
 
-        parsed_resume=pd.read_csv("parsed_resumes.csv")
-        
-        parsed_resume.to_csv('parsed_resumes.csv',index=False)
+        # parsed_resume=pd.read_csv("parsed_resumes.csv")
+        # parsed_resume.to_csv('parsed_resumes.csv',index=False)
         
         return render_template("parse_resume.html", response=response)
 
@@ -72,15 +83,15 @@ def parse_resume():
 
 @app.route("/save_parsed_resume", methods=["POST"])
 def save_parsed_resume():
-
     # Currently just adding a new row every time a resume is parsed
-    parsed_resume=pd.read_csv('./parsed_resumes.csv')
+    global collection
     response=request.get_json()
-    if response['name'] not in list(parsed_resume['Name'].values):
-        parsed_resume.loc[len(parsed_resume),:] = [response['name'], response['phone'], response['email'], response['skills'], response['past_exp'], response['education'], response['certifications'], response['job_role'], response['yoe']]
-    else:
-        parsed_resume.loc[parsed_resume['Name']==response['name'],:] = [response['name'], response['phone'], response['email'], response['skills'], response['past_exp'], response['education'], response['certifications'], response['job_role'], response['yoe']]
-    parsed_resume.to_csv('./parsed_resumes.csv', index=False)
+    collection.insert_one(response)
+    data=collection.find()   ## will fetch all the parsed resume data
+    df = pd.DataFrame(data)
+    ### Optional Step: Not recommended for building a scalable solution
+    df.to_csv('parsed_resumes.csv')  
+
     return 'OK', 200
 
 @app.route("/save_job_desc", methods=['GET','POST'])
