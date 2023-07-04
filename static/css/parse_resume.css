@@ -41,12 +41,24 @@ margin-left: 150px;
 text-align: center;
 color: blanchedalmond;
 }
+.container3{
+  justify-content: center;
+  width: 600px;
+}
+
+.container{
+  justify-content: center;
+  width: 600px;
+}
 
 .field {
 display: flex;
 justify-content: space-between;
 padding: 0.8em 0.4em;
-
+margin-left:80px;
+width: 600px;
+align-items: center;
+margin-left: 50px;
 }
 
 .centerer{
@@ -59,12 +71,23 @@ padding: 0.8em 0.4em;
 .label {
     color: #6b6c6c;
     padding-right: 0.4em;
-    display: block;
+    display: flex;
     justify-content: center;
     align-items: center;
 }
 
+.label2 {
+  color: #6b6c6c;
+  padding-right: 0.4em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 100px;
+}
+
 .box {
+  margin-left: 50px;
+
 }
 
 .jdarea {
@@ -72,8 +95,10 @@ padding: 0.8em 0.4em;
 }
 
 textarea {
-    width: 200px;
-    height:25px;
+  margin-top: 20px;
+    width: 400px;
+    /* height:30px;
+    max-height: 50px; */
     line-height:15px;
     min-width: 200px;
     max-width: 900px;
@@ -178,7 +203,6 @@ textarea {
     color: #f1f1f1; 
     font-weight: bold; 
     font-family: 'Calibri', sans-serif;
-    margin-top: 50px;
     margin-bottom: 10px;
   }
   
@@ -216,9 +240,20 @@ textarea {
     user-select: none;
     border: 1px solid transparent;
     line-height: 1.5;
+    margin-left: 50px;
   }
   
   .btn.btn-primary:hover{
     background-color: #124f78;
   }
   
+  .muted-txt-form{
+    font-size: 16px;
+    color: #fff;
+
+  }
+
+  .centerer2{
+    align-items: center;
+    margin-right: 150px;
+  }
