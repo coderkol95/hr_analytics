@@ -22,6 +22,11 @@ def available_candidates():
     global collection
     data=collection.find({},{'_id':0}) 
     parsed_resumes = pd.DataFrame(data)
+    parsed_resumes = parsed_resumes[['name','job_role', 'yoe', 'skills', 'education', 'past_exp',
+       'certifications', 'phone', 'email']]
+    parsed_resumes['yoe'] = parsed_resumes['yoe'].apply(lambda x:x.split()[0])
+    parsed_resumes.rename(columns={"yoe":"Years of experience",'job_role':"Job role", 'name':"Name", 'skills':"Skills", 'education':"Education", 'past_exp':"Past experience",
+       'certifications':"Certifications", 'phone':"Contact no.", 'email':"Email ID"}, inplace=True)
     # parsed_resumes = pd.read_csv("./parsed_resumes.csv") ## Not a best practice , just an alternative
     return render_template("available_candidates.html", table=parsed_resumes.to_html(index=False))
 
@@ -57,11 +62,17 @@ def recommend_candidate():
         job_desc = request.form['job_desc']
         try:
             selected_roles = request.form.getlist('selected_values')
-            best_candidates = score_candidates(job_desc, selected_roles)
-            return render_template("recommend_candidate.html", job_roles=job_roles, table=best_candidates.to_html(index=False))
         except:
-            best_candidates = score_candidates(job_desc, job_roles)
-            return render_template("recommend_candidate.html", job_roles=job_roles, table=best_candidates.to_html(index=False))
+            selected_roles=job_roles
+
+        best_candidates = score_candidates(job_desc, selected_roles)
+        best_candidates = best_candidates[['name','job_role', 'yoe', 'skills', 'education', 'past_exp',
+       'certifications', 'phone', 'email']]
+        best_candidates['yoe'] = best_candidates['yoe'].apply(lambda x:x.split()[0])
+        best_candidates.rename(columns={"yoe":"Years of experience",'job_role':"Job role", 'name':"Name", 'skills':"Skills", 'education':"Education", 'past_exp':"Past experience",
+        'certifications':"Certifications", 'phone':"Contact no.", 'email':"Email ID"}, inplace=True)
+
+        return render_template("recommend_candidate.html", job_roles=job_roles, table=best_candidates.to_html(index=False))
 
     return render_template("recommend_candidate.html", job_roles=job_roles)
 
