@@ -1,7 +1,27 @@
 @import url("https://fonts.googleapis.com/css?family=Raleway");
+@import url("https://fonts.googleapis.com/css?family=Roboto");
 
 :root {
   --glow-color: hsl(18, 100%, 69%);
+}
+
+/* html {
+  font-family: sans-serif;
+  line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: rgba(11, 11, 11, 0);
+} */
+
+h2 {
+  font-size: 36px; 
+  font-style: bold; 
+  color: #f1f1f1; 
+  font-weight: bold; 
+  font-family: 'Calibri', sans-serif;
+}
+
+.img{
+  margin-left: 90px;
 }
 
 *,
@@ -29,6 +49,10 @@ body {
   display: flex;
   justify-content: center;
   gap: 20px; /* Adjust the value as per your desired spacing */
+  flex-direction: column;
+  width: 400px;
+  margin-top: 60px;
+
 }
 
 .glowing-btn {
@@ -115,3 +139,36 @@ body {
     font-size: 1em;
   }
 }
+.muted-txt{
+  font-size: 18px;
+}
+
+.btn.btn-primary {
+  background: #4f81c7;
+  border-color: None;
+  color: #fff;
+  /* -webkit-box-shadow: 3px 5px 0px 0px #3d73c0;
+  -moz-box-shadow: 3px 5px 0px 0px #3d73c0;
+  box-shadow: 3px 5px 0px 0px #3d73c0; */
+}
+
+.btn-block {
+  display: block;
+  width: 400px;
+  height: 50px;
+  padding: 10px;
+  border-radius: 20px;
+}
+
+.btn{
+  text-align: center;
+  vertical-align: middle;
+  user-select: none;
+  border: 1px solid transparent;
+  line-height: 1.5;
+}
+
+.btn.btn-primary:hover{
+  background-color: #124f78;
+}
+

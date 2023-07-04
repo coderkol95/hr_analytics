@@ -9,21 +9,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create JD</title>
+  <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="static/css/create_JD.css">
+    <style>
+    body {
+    background-image: url('./static/BG_Image_2.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    }
+  </style>
 </head>
 <body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="/">HR Analytics</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="/create_JD">Create JD</a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="/parse_resume">Parse Resume</a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="/available_candidates">Candidate DB</a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="/recommend_candidate">Recommendation</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
     <div class="page">
         <div class="container">
             <div class="field">
                 <div class="centerer">
-                    <button class='glowing-btn' onclick="window.location='/'"><span class='glowing-txt'>Homepage</span></button>
                 </div>
             </div>            
+            <h2 align="center">Create job Description</h2>
             <form name="jd_details" class="formclass" action="/create_JD" method="post">
 
                 <div class="field">
                     <div class="label">
-                        <label for="requisition_id"><span class='glowing-txt'>Requisition ID:</span></label>
+                        <label for="requisition_id"><span class='muted-txt-form'>Requisition ID:</span></label>
                     </div>
                     <div class="box">     
                         <textarea id="requisition_id" data-autosize-input='{ "space": 40 }' name="requisition_id" onkeyup="adjustTextareaHeight('requisition_id')" required></textarea>
@@ -31,7 +67,7 @@
                 </div>
                 <div class="field">
                     <div class="label">
-                        <label for="metadata"><span class='glowing-txt'>About the company and role:</span></label>
+                        <label for="metadata"><span class='muted-txt-form'>About the company and role:</span></label>
                     </div>
                     <div class="box">     
                         <textarea id="metadata" data-autosize-input='{ "space": 40 }' name="metadata" onkeyup="adjustTextareaHeight('metadata')" required></textarea>
@@ -40,7 +76,7 @@
 
                 <div class="field">
                     <div class="label">
-                        <label for="designation"><span class='glowing-txt'>Designation:</span></label>
+                        <label for="designation"><span class='muted-txt-form'>Designation:</span></label>
                     </div>
                     <div class="box">     
                         <textarea id="designation" data-autosize-input='{ "space": 40 }' name="designation" onkeyup="adjustTextareaHeight('designation')" required></textarea>
@@ -49,7 +85,7 @@
 
                 <div class="field">
                     <div class="label">
-                        <label for="min_education"><span class='glowing-txt'>Min. educational qualifications required:</span></label>
+                        <label for="min_education"><span class='muted-txt-form'>Min. educational qualifications required:</span></label>
                     </div>
                     <div class="box">     
                         <textarea id="min_education" data-autosize-input='{ "space": 40 }' name="min_education" onkeyup="adjustTextareaHeight('min_education')" required></textarea>
@@ -58,16 +94,16 @@
 
                 <div class="field">
                     <div class="label">
-                <label for="experience"><span class='glowing-txt'>Min. experience required:</span></label>
+                <label for="experience"><span class='muted-txt-form'>Min. experience required:</span></label>
                     </div>
                     <div class="box">     
-                        <input type="number" name="experience" min="0" max="15" required>
+                        <input type="number" name="experience" min="0" max="15"  style="width: 200px;" required>
                     </div>
                 </div>
 
                 <div class="field">
                     <div class="label">
-                        <label for="responsibilities"><span class='glowing-txt'>Roles and responsibilities:</span></label>
+                        <label for="responsibilities"><span class='muted-txt-form'>Roles and responsibilities:</span></label>
                     </div>
                     <div class="box">     
                         <textarea id="responsibilities" data-autosize-input='{ "space": 40 }' name="responsibilities" onkeyup="adjustTextareaHeight('responsibilities')" required></textarea>
@@ -76,7 +112,7 @@
 
                 <div class="field">
                     <div class="label">
-                        <label for="techstack"><span class='glowing-txt'>Required experience in tools and technologies:</span></label>
+                        <label for="techstack"><span class='muted-txt-form'>Required experience in tools and technologies:</span></label>
                     </div>
                     <div class="box">     
                         <textarea id="techstack" data-autosize-input='{ "space": 40 }' name="techstack" onkeyup="adjustTextareaHeight('techstack')" required></textarea>
@@ -85,7 +121,7 @@
 
                 <div class="field">
                     <div class="label">
-                        <label for="role_type"><span class='glowing-txt'>Type of role:</span></label>
+                        <label for="role_type"><span class='muted-txt-form'>Type of role:</span></label>
                     </div>
                     <div class="box">     
                         <textarea id="role_type" data-autosize-input='{ "space": 40 }' name="role_type" onkeyup="adjustTextareaHeight('role_type')" required></textarea>
@@ -94,7 +130,7 @@
 
                 <div class="field">
                     <div class="label">
-                        <label for="role_location"><span class='glowing-txt'>Role location:</span></label>
+                        <label for="role_location"><span class='muted-txt-form'>Role location:</span></label>
                     </div>
                     <div class="box">     
                         <textarea id="role_location" data-autosize-input='{ "space": 40 }' name="role_location" onkeyup="adjustTextareaHeight('role_location')" required></textarea>
@@ -103,7 +139,7 @@
 
                 <div class="field">
                     <div class="label">
-                        <label for="other_tools"><span class='glowing-txt'>Anything else that you are looking for:</span></label>
+                        <label for="other_tools"><span class='muted-txt-form'>Anything else that you are looking for:</span></label>
                     </div>
                     <div class="box">     
                         <textarea id="other_tools" data-autosize-input='{ "space": 40 }' name="other_tools" onkeyup="adjustTextareaHeight('other_tools')"></textarea>
@@ -111,7 +147,8 @@
                 </div>
                 <div class="field">
                     <div class="centerer">
-                        <button class='glowing-btn'><span onclick="jd_details.submit()" class='glowing-txt'>Create job description</span></button>
+                        <!-- <button class='btn mb-2 mb-m-0 btn-round btn-primary btn-block' onclick="window.location='/'"><span class='muted-txt'>Homepage</span></button> -->
+                        <button class='btn mb-2 mb-m-0 btn-round btn-primary btn-block'><span onclick="jd_details.submit()" class='muted-txt'>Create JD</span></button>
                     </div>
                 </div>
             </form>
@@ -123,8 +160,8 @@
                     {% if generated_jd %}
                     <textarea class="jdarea" id="generated_job_desc" data-autosize-input='{ "space": 40 }' name="generated_job_desc" onmouseover="adjustTextareaHeight('generated_job_desc')">{{generated_jd}}</textarea>              
                     
-                    <div class="centerer">
-                        <button class='glowing-btn' onclick="save_job_desc()"><span class='glowing-txt'>Save job description</span></button>
+                    <div class="centerer2">
+                        <button class='btn mb-2 mb-m-0 btn-round btn-primary btn-block' onclick="save_job_desc()"><span class='muted-txt'>Save job description</span></button>
                     </div>
 
                     {% else %}

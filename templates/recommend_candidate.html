@@ -3,39 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="static/css/recommend_candidate.css">
     <title>Candidate recommendation</title>
+    <style>
+         body {
+        background-image: url('./static/BG_Image_2.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
+        }
+    </style>
 </head>
 <body>
-    <div class="page">
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
         <div class="container">
+          <a class="navbar-brand" href="/">HR Analytics</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="/create_JD">Create JD</a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="/parse_resume">Parse Resume</a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="/available_candidates">Candidate DB</a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="/recommend_candidate">Recommendation</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+    <div class="page">
+        <div class="container2">
             <div class="field">
                 <div class="centerer">
-                    <button class='glowing-btn' onclick="window.location='/'"><span class='glowing-txt'>Homepage</span></button>
+                    <h2 align="center">Candidate Recommendation</h2>
+                    <!-- <button class='glowing-btn' onclick="window.location='/'"><span class='glowing-txt'>Homepage</span></button> -->
                 </div>
             </div>            
             <form name="recommend_candidate" class="formclass" enctype="multipart/form-data" action="/recommend_candidate" method="post">
 
                 <div class="field">
                     <div class="label">
-                        <textarea id="job_desc" data-autosize-input='{ "space": 40 }' name="job_desc" onkeyup="adjustTextareaHeight('job_desc')" required></textarea>
+                        <textarea class="pasted_jd" id="job_desc" data-autosize-input='{ "space": 40 }' name="job_desc" onkeyup="adjustTextareaHeight('job_desc')" required></textarea>
                     </div>
                     <div class="box">
+                        <div>Filter by Job role</div><br>
                         {% for value in job_roles %}
-                        <input type="checkbox" class='glowing-btn' name="selected_values" value="{{ value }}"><span style="color: rgb(0, 0, 0);">{{ value }}</span><br>
+                        <input type="checkbox" class='glowing-btn' name="selected_values" value=" {{ value }}"><span style="color: rgb(245, 245, 245);">  {{ value }}</span><br>
                         {% endfor %}
                         
                     </div>
                 </div>
                 <div class="field">
                     <div class="centerer">
-                        <button class='glowing-btn'><span onclick="recommend_candidate.submit()" class='glowing-txt'>Get recommendations</span></button>   
+                        <button class='btn mb-2 mb-m-0 btn-round btn-primary btn-block'><span onclick="recommend_candidate.submit()" class='glowing-txt'>Get recommendations</span></button>   
                     </div>
                 </div>  
             </form>
         </div>
 
-        <div class="container">
+        <div class="container2">
             <!-- <div class="field">
                 <div class="label">
                     {% if scores %}

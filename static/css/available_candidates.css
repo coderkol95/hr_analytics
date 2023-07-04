@@ -49,11 +49,13 @@ height: 100%; /* Set the height of the page div */
 width: 80%;
 }
 
-.container {
+.container2 {
 /* display: flex; */
 justify-content: center;
 gap: 2px;
 text-align: center;
+color: blanchedalmond;
+margin-top: 80px;
 
 }
 
@@ -140,5 +142,55 @@ text-align: center;
     .glowing-btn{
       font-size: 1em;
     }
+  }
+  
+
+  h2 {
+    font-size: 36px; 
+    font-style: bold; 
+    color: #f1f1f1; 
+    font-weight: bold; 
+    font-family: 'Calibri', sans-serif;
+    margin-top: 50px;
+  }
+  
+
+  .muted-txt{
+    font-size: 16px;
+  }
+
+  .muted-txt-form{
+    font-size: 16px;
+    color: #fff;
+
+  }
+  
+  .btn.btn-primary {
+    background: #4f81c7;
+    border-color: None;
+    color: #fff;
+    /* -webkit-box-shadow: 3px 5px 0px 0px #3d73c0;
+    -moz-box-shadow: 3px 5px 0px 0px #3d73c0;
+    box-shadow: 3px 5px 0px 0px #3d73c0; */
+  }
+  
+  .btn-block {
+    display: block;
+    width: 200px;
+    height: 50px;
+    padding: 10px;
+    border-radius: 10px;
+  }
+  
+  .btn{
+    text-align: center;
+    vertical-align: middle;
+    user-select: none;
+    border: 1px solid transparent;
+    line-height: 1.5;
+  }
+  
+  .btn.btn-primary:hover{
+    background-color: #124f78;
   }
   

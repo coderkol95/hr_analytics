@@ -2,15 +2,31 @@
 <html>
 <head>
   <link rel="stylesheet" type="text/css" href="static/css/home.css">
+  <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <style>
+    body {
+    background-image: url('./static/BG_Image_2.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    }
+  </style>
 </head>
-<body>
+<body>  
+  <div class="header">
+    <img src="./static/BG_Image_1.png" alt="Logo" class="img" width="210" height="160">
+    <h2 align="center">HR Analytics Portal</h2>
     <div class="container">
-      <button id="button1" class='glowing-btn'><span class='glowing-txt'>Create job description</span></button>
-      <button id="button2" class='glowing-btn'><span class='glowing-txt'>Parse resume</span></button>
-      <button id="button3" class='glowing-btn'><span class='glowing-txt'>Get candidate recommendation</span></button>
-      <button id="button4" class='glowing-btn'><span class='glowing-txt'>Available candidates</span></button>
+      <button id="button1" type="button" class='btn mb-2 mb-m-0 btn-round btn-primary btn-block'><span class='muted-txt'>Create job description</span></button>
+      <button id="button2" type="button" class='btn mb-2 mb-m-0 btn-round btn-primary btn-block'
+                style="background-color: #99c4da;" onmouseover="this.style.backgroundColor=  '#808486' ;" onmouseout="this.style.backgroundColor='#8ca8b6';"><span class='muted-txt'>Parse resume</span></button>
+      <button id="button3" type="button" class='btn mb-2 mb-m-0 btn-round btn-primary btn-block'
+                style="background-color: #6fd7d9;" onmouseover="this.style.backgroundColor=  '#1f6f70' ;" onmouseout="this.style.backgroundColor='#40bfc1';"><span class='muted-txt'>Get candidate recommendation</span></button>
+      <button id="button4" type="button" class='btn mb-2 mb-m-0 btn-round btn-primary btn-block'
+                style="background-color: #df94b2;" onmouseover="this.style.backgroundColor=  '#86244b' ;" onmouseout="this.style.backgroundColor='#ff78ae';"><span class='muted-txt'>Available candidates</span></button>
     </div>
-
+  </div>
   <script src="static/scripts/home.js"></script>
 </body>
 </html>
