@@ -3,7 +3,7 @@
 [x] Landing page
 [x] JD generation
 [x] Resume parsing
-[ ] Candidate recommendation
+[x] Candidate recommendation
 
 # JD generation (Anupam)
 
@@ -15,11 +15,11 @@
 
 [x] Parse these details: candidate name, email, phone number, educational qualifications, experience in technologies, years of experience
 [x] Prompt
-[ ] Store parsed details
+[x] Store parsed details
 
 # Candidate recommendation 
 
-[ ] Accept job role (team lead), tools and technologies, educational experience, min. years of experience, ...
-[ ] Score resumes as a system
+[x] Accept job role (team lead), tools and technologies, educational experience, min. years of experience, ...
+[x] Score resumes as a system
 [ ] Match with tick for each matching skill/experience/etc
 [ ] Need to prepare a dashboard with graphs, ranking and ticks

@@ -133,7 +133,6 @@ def create_JD():
     return render_template("create_JD.html", generate_jd=None)
 
 @app.route("/recommend_candidate", methods=['GET','POST'])
-def recommend_candidate():
     if "user_id" in session:
         global collection
         data=collection.find({},{'_id':0}) 
