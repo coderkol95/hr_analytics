@@ -15,9 +15,10 @@
 h2 {
   font-size: 36px; 
   font-style: bold; 
-  color: #f1f1f1; 
+  color: #470404; 
   font-weight: bold; 
   font-family: 'Calibri', sans-serif;
+  /* font-family: 'Courier New', monospace; */
 }
 
 .img{
@@ -45,7 +46,7 @@ body {
   background: rgb(255, 255, 255);
 }
 
-.container {
+.container2 {
   display: flex;
   justify-content: center;
   gap: 20px; /* Adjust the value as per your desired spacing */
@@ -143,10 +144,22 @@ body {
   font-size: 18px;
 }
 
+.menu-container {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  width: 450px;
+  margin-top: 0px;
+}
+
+
 .btn.btn-primary {
   background: #4f81c7;
-  border-color: None;
-  color: #fff;
+  border-color: #000000;
+  color: #000000;
+  font-weight: 400;
+  
   /* -webkit-box-shadow: 3px 5px 0px 0px #3d73c0;
   -moz-box-shadow: 3px 5px 0px 0px #3d73c0;
   box-shadow: 3px 5px 0px 0px #3d73c0; */

@@ -2,3 +2,7 @@
 uploads/*
 /__pycache__
 /sample_resume
+.ipynb_checkpoints
+parsed_resumes_old.csv
+test.html
+app_old.py
