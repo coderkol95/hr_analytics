@@ -10,11 +10,8 @@ from dotenv import load_dotenv
 warnings.filterwarnings('ignore')
 from llm import generate_jd, parseResume, score_candidates
 from flask import Flask, render_template, request, url_for, redirect, session
-from flask import Flask, render_template, request, redirect, session,url_for, flash
-load_dotenv()
 
-## getting the mongoDB Collection: DataBase Name : Resume , Collection Name : Resume
-collection  = pymongo.MongoClient( os.getenv("MONGO_URI") )['Resume']['Resume']
+load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY')
@@ -27,8 +24,12 @@ db_config = {
     "database": os.getenv('DB_NAME'),
 }
 
+## Connecting to the mysql database to store user 
 conn = mysql.connector.connect(**db_config)
 cursor = conn.cursor()
+
+## getting the mongoDB Collection: DataBase Name : Resume , Collection Name : Resume
+collection  = pymongo.MongoClient( os.getenv("MONGO_URI") )['Resume']['Resume']
 
 @app.route("/")
 def home():
@@ -89,11 +90,6 @@ def login():
 def dashboard():
     # Check if the user is logged in
     if "user_id" in session:
-        # Fetch user data from MySQL if needed
-        # user_id = session["user_id"]
-        # cursor.execute("SELECT * FROM users WHERE id = %s", (user_id,))
-        # user = cursor.fetchone()
-        # return render_template("dashboard.html", user=user)
         return render_template("home.html")
     else:
         return redirect("/")
@@ -102,10 +98,17 @@ def dashboard():
 def available_candidates():
     if "user_id" in session:
         global collection
-        data=collection.find({},{'_id':0}) 
-        parsed_resumes = pd.DataFrame(data)
+        fetched_data=collection.find({},{'_id':0}) 
+        data = pd.DataFrame(fetched_data)
         # parsed_resumes = pd.read_csv("./parsed_resumes.csv") ## Not a best practice , just an alternative
-        return render_template("available_candidates.html", table=parsed_resumes.to_html(index=False))
+        items_per_page = 4 # Number of pages to appear in the first place
+        page = int(request.args.get('page', 1))
+        total_pages = (len(data) + items_per_page - 1) // items_per_page
+        start_idx = (page - 1) * items_per_page
+        end_idx = min(start_idx + items_per_page, len(data))
+        current_page_data = data[start_idx:end_idx].to_dict(orient='records')
+        return render_template("available_candidates.html", data=current_page_data, current_page=page, 
+                                    total_pages=total_pages, prev_page=page - 1,next_page=page + 1)
     else:
         return redirect("/")
 
