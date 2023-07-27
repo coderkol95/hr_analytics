@@ -107,6 +107,16 @@ textarea {
     overflow:hidden;
 }
 
+.menu-container {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  width: 850px;
+  margin-left: 50px;
+  margin-top: 0px;
+}
+
 /* .glowing-btn {
     position: relative;
     color: var(--glow-color);
@@ -199,7 +209,7 @@ textarea {
   h2 {
     font-size: 36px; 
     font-style: bold; 
-    color: #f1f1f1; 
+    color: #4a0101; 
     font-weight: bold; 
     font-family: 'Calibri', sans-serif;
     margin-bottom: 10px;
