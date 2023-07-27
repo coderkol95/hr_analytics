@@ -12,7 +12,6 @@ from llm import generate_jd, parseResume, score_candidates
 from flask import Flask, render_template, request, url_for, redirect, session
 
 load_dotenv()
-
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY')
 
