@@ -6,3 +6,5 @@ uploads/*
 parsed_resumes_old.csv
 test.html
 app_old.py
+auth.py
+test_2.html

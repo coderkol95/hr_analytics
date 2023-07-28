@@ -8,11 +8,12 @@ import pandas as pd
 import mysql.connector
 from dotenv import load_dotenv
 warnings.filterwarnings('ignore')
+from werkzeug.utils import secure_filename
 from llm import generate_jd, parseResume, score_candidates
-from flask import Flask, render_template, request, url_for, redirect, session
+from shortlist_candidate import CandidateCredentials , DescriptiveQnAGenerator 
+from flask import Flask, render_template, request, url_for, redirect, session, jsonify
 
 load_dotenv()
-
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY')
 
@@ -62,6 +63,7 @@ def signup():
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
     cursor.execute("INSERT INTO users (id, email, password) VALUES (%s,%s, %s)", (id, email, hashed_password))
     conn.commit()
+    conn.close()
 
     return {"success": True, "message": "Sign-up successful!"}
 
@@ -160,16 +162,19 @@ def create_JD():
 def parse_resume():
     if request.method=="POST":
         if "user_id" in session:
-            file = request.files['file']
-            pdf_path = 'uploads/' + file.filename
-            file.save(pdf_path)
-            
-            response = parseResume(pdf_path)  ## dictionary
+            files = request.files.getlist('file')
+            response_list=[]
+            for file in files:
+                filename = secure_filename(file.filename)
+                pdf_path = 'uploads/' + filename
+                file.save(pdf_path)
+                response = parseResume(pdf_path)  ## dictionary
+                response_list.append(response)    ## 
 
             # parsed_resume=pd.read_csv("parsed_resumes.csv")
             # parsed_resume.to_csv('parsed_resumes.csv',index=False)
             
-            return render_template("parse_resume.html", response=response)
+            return render_template("parse_resume.html", responses=response_list)
         else:
             return redirect("/")
 
@@ -203,6 +208,20 @@ def save_job_desc():
         else:
             return redirect("/")
         
+@app.route("/shortlist_candidates", methods=['GET','POST'])
+def shortlist():
+    if request.method=="POST":
+        if "user_id" in session:
+            ### Hard-coded  as of now : But the logic is to be built where we get a list of emails for shortlisted candidates
+            emails =  []
+            for email in emails:
+                upsert_candidate = CandidateCredentials(db_config).create_candidate_credentials(email)
+                if upsert_candidate !=None:
+                    DescriptiveQnAGenerator(email).insertDescriptiveQAforCandidate()
+                else:
+                    return jsonify("Error during candidate credential creation")
+                    
+                    
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     session.pop('user_id')

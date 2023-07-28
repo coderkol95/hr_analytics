@@ -49,6 +49,7 @@
 
     <div class="page">
         <div class="container">
+            <div class="menu-container">
             <h2 align="center">Parse Resume</h2>    
             <!-- <div class="field">
                 <div class="centerer">
@@ -59,7 +60,7 @@
 
                 <div class="field">
                     <div class="label2">
-                        <input type="file" name="file" id="file" accept=".pdf" required>
+                        <input type="file" name="file" id="file" accept=".pdf" required multiple>
                     </div>
                     <div class="box">  
                         <button class='btn mb-2 mb-m-0 btn-round btn-primary btn-block'><span onclick="parse_resume.submit()" class='muted-txt'>Parse resume</span></button>   
@@ -71,7 +72,8 @@
         <div class="container">
             <div class="field">
                 <div class="label">
-                    {% if response %}
+                    {% if responses %}
+                    {% for response in responses %}
                     <div class="container">
                         <div class="formclass">
                             <div class="field">
@@ -158,13 +160,13 @@
                             </div>
                         </div>
                     </div>
-                    {% else %}
-                        Waiting for you to upload resume ...
-                    {% endif %}    
+                    {% endfor %}
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
+</div>
     </body>
     <script src="static/scripts/parse_resume.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
