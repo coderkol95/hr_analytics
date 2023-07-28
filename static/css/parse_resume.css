@@ -209,13 +209,12 @@ textarea {
   h2 {
     font-size: 36px; 
     font-style: bold; 
-    color: #4a0101; 
+    color: #470000; 
     font-weight: bold; 
     font-family: 'Calibri', sans-serif;
     margin-bottom: 10px;
   }
   
-
   .muted-txt{
     font-size: 16px;
   }
