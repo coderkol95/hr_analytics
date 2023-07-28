@@ -60,7 +60,7 @@
 
                 <div class="field">
                     <div class="label2">
-                        <input type="file" name="file" id="file" accept=".pdf" required>
+                        <input type="file" name="file" id="file" accept=".pdf" required multiple>
                     </div>
                     <div class="box">  
                         <button class='btn mb-2 mb-m-0 btn-round btn-primary btn-block'><span onclick="parse_resume.submit()" class='muted-txt'>Parse resume</span></button>   
@@ -72,7 +72,8 @@
         <div class="container">
             <div class="field">
                 <div class="label">
-                    {% if response %}
+                    {% if responses %}
+                    {% for response in responses %}
                     <div class="container">
                         <div class="formclass">
                             <div class="field">
@@ -159,9 +160,8 @@
                             </div>
                         </div>
                     </div>
-                    {% else %}
-                        Waiting for you to upload resume ...
-                    {% endif %}    
+                    {% endfor %}
+                    {% endif %}
                 </div>
             </div>
         </div>
