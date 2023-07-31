@@ -29,7 +29,7 @@ class CandidateCredentials:
         except Exception as e:
             raise(e)
 
-class DescriptiveQnAGenerator:
+class ResumeQnAGenerator:
     def __init__(self,candidate_email_id):
         self.candidate_email_id = candidate_email_id
 
@@ -64,6 +64,42 @@ class DescriptiveQnAGenerator:
             return descriptive_prompt
         else:
             return "Candidate information not found!"
+        
+    def promptMCQs(self) -> str:
+        '''
+            Prompt engineeering with fewshots.
+        '''
+        filter_={"email":self.candidate_email_id}
+        projection = {"_id": 0,"phone":0,"job_role":0,"education":0,'name':0,'email':0}
+        query_result = collection.find(filter_, projection) 
+        d  = pd.DataFrame(query_result)
+        candidate_summary = d.to_dict(orient='records')[0]
+        del d
+        if candidate_summary:
+            mcq_prompt = f'''
+                    You are an experienced recruiter specialized in technical assessment of the candidates.
+                    From the given dictionary in the # delimiter, you need to prepare 2 easy, 2 medium and 1 hard MCQ  type purely technical question.
+                    You will also have to write answer for the same. Here is the JSON Schema instance your output must adhere to:
+                    "[{{
+                        "question": "Which programming language is often used for data analysis and has libraries like Pandas and NumPy?",
+                        "options": {{
+                            "a": "SQL",
+                            "b": "Python",
+                            "c": "R Programming",
+                            "d": "Excel/Google Sheets"
+                        }},
+                        "answer": "b"
+                    }}]".
+                    Prepare the level of question based on candidates years of experience(yoe). 
+                    The candidate's summary goes here:
+                    #{candidate_summary}#.
+                    Response shall be in Python dictionary Format with question, options and answer as keys. Contain no additional information. 
+                    Do not create seperate labels of easy, medium and hard in the response. Your output will be parsed and type-checked according to the provided schema instance inside & delimiter, so make sure all fields in your output match exactly!
+                    '''.replace("\n","").replace("  ","")
+            
+            return mcq_prompt
+        else:
+            return "Candidate information not found!"
 
     def generateQAFromDescriptivePrompt(self) -> list:
         '''
@@ -71,6 +107,22 @@ class DescriptiveQnAGenerator:
         '''
         try:
             descriptive_prompt = self.promptDescriptiveQuestions()
+            completions = openai.Completion.create(
+                engine = 'gpt-3.5-turbo',
+                prompt = descriptive_prompt,
+                temperature = 3
+            )
+            response = completions.choices[0]['text']
+            return eval(response)
+        except Exception as e :
+            raise(e)
+        
+    def generateQAFromMCQPrompt(self) -> list:
+        '''
+            Crtical step : Generating the QnA output as list of dict using GPT 3.5 Turbo
+        '''
+        try:
+            descriptive_prompt = self.promptMCQs()
             completions = openai.Completion.create(
                 engine = 'gpt-3.5-turbo',
                 prompt = descriptive_prompt,
@@ -125,3 +177,70 @@ class DescriptiveQnAGenerator:
         except Exception as e :
             raise(e)
         
+    def insertMCQAforCandidate(self):
+        '''
+            Inserting the questions and answers generated based on the resume of the 
+            candidate to the mongoDB database. 
+        '''
+        try:
+            filter_= {"email":self.candidate_email_id}
+            candidate_name = collection.find(filter_, {'name'}).next()['name']
+            mc_qna_dict = [
+                        {
+                            "question": "Which function in MS Excel is used to search for a value in the first column of a table array and return a value in the same row from another column?",
+                            "options": {
+                                "a": "VLOOKUP",
+                                "b": "Pivot Table",
+                                "c": "Minitab",
+                                "d": "Proprofs"
+                            },
+                            "answer": "a"
+                        },
+                        {
+                            "question": "What does DMAIC stand for in Lean Six Sigma?",
+                            "options": {
+                                "a": "Define, Measure, Analyze, Improve, Control",
+                                "b": "Data Management and Analysis for Improved Control",
+                                "c": "Data Measurement, Analysis, and Control",
+                                "d": "Define, Manage, Analyze, Implement, Control"
+                            },
+                            "answer": "a"
+                        },
+                        {
+                            "question": "Which programming language is often used for data analysis and has libraries like Pandas and NumPy?",
+                            "options": {
+                                "a": "SQL",
+                                "b": "Python",
+                                "c": "R Programming",
+                                "d": "Excel/Google Sheets"
+                            },
+                            "answer": "b"
+                        },
+                        {
+                            "question": "What is the primary function of a Technical Support Specialist?",
+                            "options": {
+                                "a": "People Development",
+                                "b": "Problem-Solving",
+                                "c": "Process Improvement",
+                                "d": "Engine Operations"
+                            },
+                            "answer": "b"
+                        },
+                        {
+                            "question": "What is Kaizen in Lean Six Sigma?",
+                            "options": {
+                                "a": "Continuous Improvement",
+                                "b": "Data Analysis",
+                                "c": "Customer Relationship Management",
+                                "d": "Process Automation"
+                            },
+                            "answer": "a"
+                        }
+                    ]
+
+
+            record = {"name":candidate_name, "email":self.candidate_email_id,"resume_mcq": mc_qna_dict}
+            candidate_qna.insert_one(record)
+
+        except Exception as e :
+            raise(e)
