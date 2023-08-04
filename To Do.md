@@ -23,3 +23,14 @@
 [ ] Score resumes as a system
 [ ] Match with tick for each matching skill/experience/etc
 [ ] Need to prepare a dashboard with graphs, ranking and ticks
+
+# Hackathon 
+1. Multiple pdf + docx - Pending 
+2. Forget Password  - Pending 
+3. Password conditions - Pending 
+4. Candidate portal - Done 
+5. Mail functionality - Done 
+6. Exam questioniore - Done 
+7. During Resume parsing there has to be a Requisition Number against candidate's info
+8. The JD's needs to be stored with a Primary Key in MongoDB.
+9. The relational setup between requisition number and candidate is crucial.
