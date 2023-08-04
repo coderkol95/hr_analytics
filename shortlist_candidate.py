@@ -2,6 +2,7 @@ import os
 import uuid
 import openai
 import pymongo
+import requests
 import pandas as pd
 import mysql.connector
 from dotenv import load_dotenv
@@ -32,6 +33,8 @@ class CandidateCredentials:
 class ResumeQnAGenerator:
     def __init__(self,candidate_email_id):
         self.candidate_email_id = candidate_email_id
+        self.chatgtp_api_key = os.getenv('OPENAI_API_KEY')
+        self.chatgpt_url = os.getenv('CHATGPT_URL')
 
     def promptDescriptiveQuestions(self) -> str:
         '''
@@ -49,7 +52,7 @@ class ResumeQnAGenerator:
                 From the given dictionary in the $ delimiter, you need to prepare 2 easy, 2 medium and 1 hard descriptive type question.
                 You will also have to write answer for the same. Here is the JSON Schema instance your output must adhere to:
                 
-                "json
+                "'json':
                 [{{
                 'question': 'Which programming language is often used for data analysis and has libraries like Pandas and NumPy?',
                 'answer': 'Python'
@@ -80,7 +83,8 @@ class ResumeQnAGenerator:
                     You are an experienced recruiter specialized in technical assessment of the candidates.
                     From the given dictionary in the # delimiter, you need to prepare 2 easy, 2 medium and 1 hard MCQ  type purely technical question.
                     You will also have to write answer for the same. Here is the JSON Schema instance your output must adhere to:
-                    "[{{
+                    "'json':
+                    [{{
                         "question": "Which programming language is often used for data analysis and has libraries like Pandas and NumPy?",
                         "options": {{
                             "a": "SQL",
@@ -100,6 +104,31 @@ class ResumeQnAGenerator:
             return mcq_prompt
         else:
             return "Candidate information not found!"
+        
+    def askGPT(self, prompt):
+        '''
+            Making connection to  the chatGPT server to return the response in JSON format always.
+        '''
+        chatgpt_headers = {
+                "content-type": "application/json",
+                "Authorization":"Bearer {}".format(self.chatgtp_api_key)}
+        
+        messages = [
+                    {"role": "system", "content": "You are an experienced recruiter specialized in technical assessment of the candidates"},
+                    {"role": "user", "content": prompt}
+                    ]
+        chatgpt_payload = {
+                "model": "gpt-3.5-turbo",
+                "messages": messages,
+                "temperature": 1.2,
+                "max_tokens": 1024,
+                "stop": ["###"]
+                }
+        response = requests.request("POST", self.chatgpt_url, json=chatgpt_payload, headers=chatgpt_headers)
+        response = response.json()
+        print(response)
+        response_content = eval(response['choices'][0]['message']['content'])
+        return response_content[list(response_content.keys())[0]]
 
     def generateQAFromDescriptivePrompt(self) -> list:
         '''
@@ -107,13 +136,8 @@ class ResumeQnAGenerator:
         '''
         try:
             descriptive_prompt = self.promptDescriptiveQuestions()
-            completions = openai.Completion.create(
-                engine = 'gpt-3.5-turbo',
-                prompt = descriptive_prompt,
-                temperature = 3
-            )
-            response = completions.choices[0]['text']
-            return eval(response)
+            answer = self.askGPT(descriptive_prompt)
+            return answer
         except Exception as e :
             raise(e)
         
@@ -122,14 +146,9 @@ class ResumeQnAGenerator:
             Crtical step : Generating the QnA output as list of dict using GPT 3.5 Turbo
         '''
         try:
-            descriptive_prompt = self.promptMCQs()
-            completions = openai.Completion.create(
-                engine = 'gpt-3.5-turbo',
-                prompt = descriptive_prompt,
-                temperature = 3
-            )
-            response = completions.choices[0]['text']
-            return eval(response)
+            mcq_prompt = self.promptMCQs()
+            answer = self.askGPT(mcq_prompt)
+            return answer
         except Exception as e :
             raise(e)
     
@@ -140,39 +159,16 @@ class ResumeQnAGenerator:
         '''
         try:
             filter_= {"email":self.candidate_email_id}
-            #projection = {"_id": 0,"phone":0,"job_role":0,"education":0,"yoe":0,'name':0,'email':0}
-            #query_result = collection.find(filter_, projection) 
             candidate_name = collection.find(filter_, {'name'}).next()['name']
-            #d  = pd.DataFrame(query_result)
-            #candidate_summary = d.to_dict(orient='records')[0]
-            #del d 
-            #descriptive_prompt = promptDescriptiveQuestions(candidate_summary)
-            # descriptive_qna_dict = self.generateQAFromDescriptivePrompt()
-            descriptive_qna_dict = [
-                                    {
-                                        "question": "What is the purpose of VLOOKUP function in MS Excel, and how is it used?",
-                                        "answer": "The VLOOKUP function in MS Excel is used to search for a value in the first column of a table range and return a related value from another specified column. It is often used for performing vertical lookups or searches in a dataset. The syntax of the VLOOKUP function is: VLOOKUP(lookup_value, table_array, col_index_num, [range_lookup])."
-                                    },
-                                    {
-                                        "question": "Explain the concept of Lean Six Sigma - Green Belt and its significance in process improvement.",
-                                        "answer": "Lean Six Sigma - Green Belt is a level of certification that indicates a person's understanding and proficiency in process improvement methodologies. It focuses on the DMAIC approach (Define, Measure, Analyze, Improve, and Control) for identifying and resolving problems in a systematic and data-driven manner. A Green Belt holder plays a vital role in process improvement projects, driving efficiency, reducing defects, and improving overall quality."
-                                    },
-                                    {
-                                        "question": "Can you describe the critical components of Salesforce as a customer relationship management (CRM) platform?",
-                                        "answer": "Salesforce is a widely used CRM platform that consists of several critical components. Some of the key components include: 1. Leads: Managing potential customers and their information. 2. Accounts: Storing information about individual customers or organizations. 3. Opportunities: Tracking potential sales deals and their progress. 4. Reports and Dashboards: Analyzing data and generating visualizations for insights. 5. Workflows and Automation: Automating repetitive tasks and processes. 6. Email Integration: Integrating emails with the CRM to track communication with customers."
-                                    },
-                                    {
-                                        "question": "How would you approach a complex technical issue as a Technical Support Specialist, and what problem-solving strategies would you employ?",
-                                        "answer": "As a Technical Support Specialist, I would start by actively listening to the customer's issue and gathering all relevant information. Then, I would use my critical thinking skills to analyze the problem thoroughly, breaking it down into smaller components. Next, I would apply systematic problem-solving strategies such as root cause analysis and the 5 Whys technique to identify the underlying cause. Once the root cause is determined, I would propose and implement a solution while keeping the customer informed throughout the process. Finally, I would verify that the issue is resolved and provide additional support if needed."
-                                    },
-                                    {
-                                        "question": "Explain the concept of Kaizen and its role in continuous process improvement.",
-                                        "answer": "Kaizen is a Japanese term that translates to 'continuous improvement.' In the context of process improvement, Kaizen refers to the philosophy of making incremental, small improvements in processes, products, or services over time. It involves the participation of all employees in identifying areas for improvement and finding innovative solutions. Kaizen aims to create a culture of continuous improvement, where even minor enhancements can lead to significant long-term benefits, such as increased efficiency, reduced waste, and improved quality."
-                                    }
-                                    ]
-
-            record = {"name":candidate_name, "email":self.candidate_email_id,"descriptive_qna": descriptive_qna_dict}
-            candidate_qna.insert_one(record)
+            res = candidate_qna.find(filter_)
+            d = pd.DataFrame(res)
+            descriptive_qna_dict = self.generateQAFromDescriptivePrompt()
+            if len(d)==0:
+                record = {"name":candidate_name, "email":self.candidate_email_id,"resume_descriptive_qna": descriptive_qna_dict}
+                candidate_qna.insert_one(record)
+            else:
+                candidate_qna.update_one({"email": self.candidate_email_id},
+                            {"$set": {"resume_descriptive_qna": descriptive_qna_dict}})
 
         except Exception as e :
             raise(e)
@@ -185,62 +181,16 @@ class ResumeQnAGenerator:
         try:
             filter_= {"email":self.candidate_email_id}
             candidate_name = collection.find(filter_, {'name'}).next()['name']
-            mc_qna_dict = [
-                        {
-                            "question": "Which function in MS Excel is used to search for a value in the first column of a table array and return a value in the same row from another column?",
-                            "options": {
-                                "a": "VLOOKUP",
-                                "b": "Pivot Table",
-                                "c": "Minitab",
-                                "d": "Proprofs"
-                            },
-                            "answer": "a"
-                        },
-                        {
-                            "question": "What does DMAIC stand for in Lean Six Sigma?",
-                            "options": {
-                                "a": "Define, Measure, Analyze, Improve, Control",
-                                "b": "Data Management and Analysis for Improved Control",
-                                "c": "Data Measurement, Analysis, and Control",
-                                "d": "Define, Manage, Analyze, Implement, Control"
-                            },
-                            "answer": "a"
-                        },
-                        {
-                            "question": "Which programming language is often used for data analysis and has libraries like Pandas and NumPy?",
-                            "options": {
-                                "a": "SQL",
-                                "b": "Python",
-                                "c": "R Programming",
-                                "d": "Excel/Google Sheets"
-                            },
-                            "answer": "b"
-                        },
-                        {
-                            "question": "What is the primary function of a Technical Support Specialist?",
-                            "options": {
-                                "a": "People Development",
-                                "b": "Problem-Solving",
-                                "c": "Process Improvement",
-                                "d": "Engine Operations"
-                            },
-                            "answer": "b"
-                        },
-                        {
-                            "question": "What is Kaizen in Lean Six Sigma?",
-                            "options": {
-                                "a": "Continuous Improvement",
-                                "b": "Data Analysis",
-                                "c": "Customer Relationship Management",
-                                "d": "Process Automation"
-                            },
-                            "answer": "a"
-                        }
-                    ]
-
-
-            record = {"name":candidate_name, "email":self.candidate_email_id,"resume_mcq": mc_qna_dict}
-            candidate_qna.insert_one(record)
+            res = candidate_qna.find(filter_)
+            d = pd.DataFrame(res)
+            mc_qna_dict = self.generateQAFromMCQPrompt()
+            
+            if len(d)==0:
+                record = {"name":candidate_name, "email":self.candidate_email_id,"resume_mcq": mc_qna_dict}
+                candidate_qna.insert_one(record)
+            else:
+                candidate_qna.update_one({"email": self.candidate_email_id},
+                            {"$set": {"resume_mcq": mc_qna_dict}})
 
         except Exception as e :
             raise(e)
