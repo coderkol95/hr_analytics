@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 warnings.filterwarnings('ignore')
 from werkzeug.utils import secure_filename
 from llm import generate_jd, parseResume, score_candidates
-from shortlist_candidate import CandidateCredentials , DescriptiveQnAGenerator 
+from shortlist_candidate import CandidateCredentials , ResumeQnAGenerator 
 from flask import Flask, render_template, request, url_for, redirect, session, jsonify
 
 load_dotenv()
@@ -217,7 +217,8 @@ def shortlist():
             for email in emails:
                 upsert_candidate = CandidateCredentials(db_config).create_candidate_credentials(email)
                 if upsert_candidate !=None:
-                    DescriptiveQnAGenerator(email).insertDescriptiveQAforCandidate()
+                    ResumeQnAGenerator(email).insertDescriptiveQAforCandidate()
+                    ResumeQnAGenerator(email).insertMCQAforCandidate()
                 else:
                     return jsonify("Error during candidate credential creation")
                     
