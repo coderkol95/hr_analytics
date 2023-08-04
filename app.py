@@ -70,6 +70,7 @@ def signup():
 @app.route("/login", methods=['GET','POST'])
 def login():
     if request.method == 'POST':
+        global cursor
         email = request.form["email"]
         password = request.form["password"].encode('utf-8')
 
@@ -215,13 +216,25 @@ def shortlist():
         if "user_id" in session:
             ### Hard-coded  as of now : But the logic is to be built where we get a list of emails for shortlisted candidates
             emails =  []
+            jd = "It needs to come from somewhere"
             for email in emails:
-                upsert_candidate = CandidateCredentials(db_config).create_candidate_credentials(email)
-                if upsert_candidate !=None:
-                    ResumeQnAGenerator(email).insertDescriptiveQAforCandidate()
-                    ResumeQnAGenerator(email).insertMCQAforCandidate()
-                else:
-                    return jsonify("Error during candidate credential creation")
+                try:
+                    candidate_credentials_obj = CandidateCredentials(db_config)
+                    resume_qna_obj = ResumeQnAGenerator(email)
+                    ## Creating PW for the candidate to login in test portal
+                    candidate_credentials_obj.create_candidate_credentials(email)
+                    objective_question_prompt = resume_qna_obj.promptMCQs()
+                    subjective_question_prompt =  resume_qna_obj.promptDescriptiveQuestions()
+
+                    if objective_question_prompt:
+                        objective_questions = resume_qna_obj.askGPT(objective_question_prompt)
+                        resume_qna_obj.insertMCQAforCandidate(objective_questions)
+                    if subjective_question_prompt:
+                        subjective_questions = resume_qna_obj.askGPT(subjective_question_prompt)
+                        resume_qna_obj.insertDescriptiveQAforCandidate(subjective_questions)
+
+                except Exception as e:
+                    return jsonify(f"Cannot create resume-questions for {email}", e)
                     
                     
 @app.route('/logout', methods=['GET', 'POST'])
