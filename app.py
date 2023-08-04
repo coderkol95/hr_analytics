@@ -10,8 +10,8 @@ from dotenv import load_dotenv
 warnings.filterwarnings('ignore')
 from werkzeug.utils import secure_filename
 from llm import generate_jd, parseResume, score_candidates
-from shortlist_candidate import CandidateCredentials , ResumeQnAGenerator 
 from flask import Flask, render_template, request, url_for, redirect, session, jsonify
+from shortlist_candidate import CandidateCredentials , ResumeQnAGenerator, JDQnAGenerator
 
 load_dotenv()
 app = Flask(__name__)
@@ -70,6 +70,7 @@ def signup():
 @app.route("/login", methods=['GET','POST'])
 def login():
     if request.method == 'POST':
+        global cursor
         email = request.form["email"]
         password = request.form["password"].encode('utf-8')
 
@@ -129,7 +130,8 @@ def create_JD():
             role_type=request.form['role_type']
             role_location=request.form['role_location']
             requisition_id = request.form['requisition_id']
-            jd_from_openai = generate_jd(metadata,designation,min_education,experience,responsibilities,techstack,other_tools,role_type,role_location, requisition_id)
+            jd_from_openai = generate_jd(metadata,designation,min_education,experience,responsibilities,
+                                         techstack,other_tools,role_type,role_location, requisition_id)
 
             return render_template("create_JD.html", generated_jd=jd_from_openai)
     else:
@@ -215,12 +217,37 @@ def shortlist():
             ### Hard-coded  as of now : But the logic is to be built where we get a list of emails for shortlisted candidates
             emails =  []
             for email in emails:
-                upsert_candidate = CandidateCredentials(db_config).create_candidate_credentials(email)
-                if upsert_candidate !=None:
-                    ResumeQnAGenerator(email).insertDescriptiveQAforCandidate()
-                    ResumeQnAGenerator(email).insertMCQAforCandidate()
-                else:
-                    return jsonify("Error during candidate credential creation")
+                try:
+                    jd = "It needs to come from somewhere"
+                    candidate_credentials_obj = CandidateCredentials(db_config)
+                    ## Creating PW for the candidate to login in test portal
+                    candidate_credentials_obj.create_candidate_credentials(email)
+
+                    resume_qna_obj = ResumeQnAGenerator(email)
+                    resume_objective_question_prompt = resume_qna_obj.promptMCQs()
+                    resume_subjective_question_prompt =  resume_qna_obj.promptDescriptiveQuestions()
+
+                    if resume_objective_question_prompt:
+                        resume_objective_questions = resume_qna_obj.askGPT(resume_objective_question_prompt)
+                        resume_qna_obj.insertMCQAforCandidate(resume_objective_questions)
+                    if resume_subjective_question_prompt:
+                        resume_subjective_questions = resume_qna_obj.askGPT(resume_subjective_question_prompt)
+                        resume_qna_obj.insertDescriptiveQAforCandidate(resume_subjective_questions)
+
+                    jd_qna_obj = JDQnAGenerator(email, jd)
+                    jd_objective_question_prompt = jd_qna_obj.promptMCQsfromJD()
+                    jd_subjective_question_prompt =  jd_qna_obj.promptDescriptiveQuestionsfromJD()
+
+                    if jd_objective_question_prompt:
+                        jd_objective_questions = jd_qna_obj.askGPT(jd_objective_question_prompt)
+                        jd_qna_obj.insertMCQAforCandidate(jd_objective_questions)
+                    if jd_subjective_question_prompt:
+                        jd_subjective_questions = jd_qna_obj.askGPT(jd_subjective_question_prompt)
+                        jd_qna_obj.insertDescriptiveQAforCandidate(jd_subjective_questions)
+
+
+                except Exception as e:
+                    return jsonify(f"Cannot create Resume/JD questions for {email}", e)
                     
                     
 @app.route('/logout', methods=['GET', 'POST'])
