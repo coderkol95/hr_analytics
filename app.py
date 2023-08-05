@@ -5,7 +5,7 @@ import bcrypt
 import pymongo
 import warnings
 import pandas as pd
-import mysql.connector
+import mysql
 from dotenv import load_dotenv
 warnings.filterwarnings('ignore')
 from werkzeug.utils import secure_filename
@@ -74,7 +74,7 @@ def login():
         password = request.form["password"].encode('utf-8')
 
         # Perform authentication with MySQL (you should properly hash passwords in a real application)
-        cursor.execute(f"SELECT password FROM users WHERE email = '{email}';")
+        cursor.execute(f'SELECT password FROM users WHERE email = "{email}";')
         user = cursor.fetchone()
         if user:
             stored_password = user[0].encode('utf-8')
@@ -138,6 +138,7 @@ def create_JD():
     return render_template("create_JD.html", generate_jd=None)
 
 @app.route("/recommend_candidate", methods=['GET','POST'])
+def recommend_candidate():
     if "user_id" in session:
         global collection
         data=collection.find({},{'_id':0}) 
@@ -148,15 +149,18 @@ def create_JD():
             job_desc = request.form['job_desc']
             try:
                 selected_roles = request.form.getlist('selected_values')
-                best_candidates = score_candidates(job_desc, selected_roles)
-                return render_template("recommend_candidate.html", job_roles=job_roles, table=best_candidates.to_html(index=False))
             except:
-                best_candidates = score_candidates(job_desc, job_roles)
-                return render_template("recommend_candidate.html", job_roles=job_roles, table=best_candidates.to_html(index=False))
+                selected_roles = job_roles
+            
+            # Will work when API key is available
+            # best_candidates = score_candidates(job_desc, selected_roles)
+            best_candidates = pd.DataFrame(data=[['a1','b1','c1','d1','e1','f1','g1','h1'],['a2','b2','c2','d2','e2','f2','g2','h2']], columns=['name','phone','email','job_role','skills','desired_skills','matching_skills','relative_score'])
+
+            return render_template("recommend_candidate.html", job_roles=job_roles, scores=best_candidates.to_dict(orient='records'), flag=True)
     else:
         return redirect("/")
 
-    return render_template("recommend_candidate.html", job_roles=job_roles)
+    return render_template("recommend_candidate.html", job_roles=job_roles, flag=False)
 
 @app.route("/parse_resume", methods=['GET','POST'])
 def parse_resume():
@@ -209,19 +213,22 @@ def save_job_desc():
             return redirect("/")
         
 @app.route("/shortlist_candidates", methods=['GET','POST'])
-def shortlist():
+def shortlist_candidates():
     if request.method=="POST":
         if "user_id" in session:
             ### Hard-coded  as of now : But the logic is to be built where we get a list of emails for shortlisted candidates
-            emails =  []
+            
+            emails = request.form.getlist('email_checkbox')
+            print(emails)
             for email in emails:
                 upsert_candidate = CandidateCredentials(db_config).create_candidate_credentials(email)
-                if upsert_candidate !=None:
-                    DescriptiveQnAGenerator(email).insertDescriptiveQAforCandidate()
-                else:
-                    return jsonify("Error during candidate credential creation")
+                # if upsert_candidate !=None:
+                DescriptiveQnAGenerator(email).insertDescriptiveQAforCandidate()
+                # else:
+                    # return jsonify("Error during candidate credential creation")
                     
-                    
+    return redirect("/")
+
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     session.pop('user_id')
@@ -229,4 +236,4 @@ def logout():
     return redirect(url_for("login"))
 
 if __name__=="__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=5001)
