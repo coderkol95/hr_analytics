@@ -187,6 +187,33 @@ textarea {
       font-size: 1em;
     }
   }
+  .menu-container {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+    width: 1000px;
+    margin-top: 0px;
+  }
+  
+  .table-container {
+    overflow-x: auto;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  th, td {
+    text-align: center;
+    padding: 10px;
+    white-space: nowrap; /* Prevent text from wrapping within cells */
+    max-width: 200px; /* Set a maximum width for the cells */
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .column-divider {
+    border-right: 1px solid #dee2e6;
+  }
   
   h2 {
     font-size: 36px; 
@@ -244,3 +271,10 @@ textarea {
     max-height: 800px;
     padding: 10px;
   }
+
+  .btn-shortlist{
+    left: 27%;
+    margin-bottom: 10cm;
+    display:inline-block;
+    position: absolute;
+    }
