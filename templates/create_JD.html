@@ -16,7 +16,7 @@
     <link rel="stylesheet" type="text/css" href="static/css/create_JD.css">
     <style>
     body {
-    background-image: url('./static/BG_Image_2.jpg');
+    background-image: url('./static/BG_Image_2.png');
     background-repeat: no-repeat;
     background-size: cover;
     }
@@ -25,7 +25,7 @@
 <body>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
         <div class="container">
-          <a class="navbar-brand" href="/">HR Analytics</a>
+          <a class="navbar-brand" href="/home">HR Analytics</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -43,6 +43,9 @@
               <li class="nav-item active">
                 <a class="nav-link" href="/recommend_candidate">Recommendation</a>
               </li>
+              <li class="nav-item active">
+                <a class="nav-link" style="color: #e2e59f;" href="/logout">Logout</a>
+              </li>
             </ul>
           </div>
         </div>
@@ -54,9 +57,10 @@
                 <div class="centerer">
                 </div>
             </div>            
+            <div class="menu-container">
             <h2 align="center">Create job Description</h2>
             <form name="jd_details" class="formclass" action="/create_JD" method="post">
-
+                
                 <div class="field">
                     <div class="label">
                         <label for="requisition_id"><span class='muted-txt-form'>Requisition ID:</span></label>
@@ -153,6 +157,7 @@
                 </div>
             </form>
         </div>
+    </div>
 
         <div class="container">
             <div class="field">

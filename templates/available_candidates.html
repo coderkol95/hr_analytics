@@ -7,55 +7,118 @@
     <link rel="stylesheet" type="text/css" href="static/css/available_candidates.css">
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
-        background-image: url('./static/BG_Image_2.jpg');
+        background-image: url('./static/BG_Image_2.png');
         background-repeat: no-repeat;
         background-size: cover;
         }
       </style>
 </head>
 <body>
-  
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-        <div class="container">
-          <a class="navbar-brand" href="/">HR Analytics</a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-              <li class="nav-item active">
-                <a class="nav-link" href="/create_JD">Create JD</a>
-              </li>
-              <li class="nav-item active">
-                <a class="nav-link" href="/parse_resume">Parse Resume</a>
-              </li>
-              <li class="nav-item active">
-                <a class="nav-link" href="/available_candidates">Candidate DB</a>
-              </li>
-              <li class="nav-item active">
-                <a class="nav-link" href="/recommend_candidate">Recommendation</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="/home">HR Analytics</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="/create_JD">Create JD</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/parse_resume">Parse Resume</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/available_candidates">Candidate DB</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/recommend_candidate">Recommendation</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" style="color: #e2e59f;" href="/logout">Logout</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-    <div class="page">
+    <!-- <div class="page">
         <div class="container2">
           <h2 align="center">Available Candidates</h2>
-            <div class="field">
+            <div class="field"> -->
                 <!-- <div class="centerer">
                     <button class='btn mb-2 mb-m-0 btn-round btn-primary btn-block' onclick="window.location='/'"><span class='muted-txt'>Homepage</span></button>
                 </div> -->
-            </div>    
+            <!-- </div>    
             {{ table|safe }}
         </div>
-    </div>
-    <script src="static/scripts/create_JD.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    </div> -->
+    <div class="menu-container">
+    <h2 align="center"  style= "color: #520404; font-weight: bold">Available Candidates</h2>
+    <div class="container mt-4">
+      <div class="table-container">
+          <table class="table table-bordered">
+              <thead>
+                  <tr>
+                      <th class="column-divider">Name</th>
+                      <th class="column-divider">Phone</th>
+                      <th class="column-divider">Email</th>
+                      <th class="column-divider">Education</th>
+                      <th class="column-divider">Skills</th>
+                      <th class="column-divider">Job Role</th>
+                      <th class="column-divider">Experiences</th>
+                      <th class="column-divider">YOE</th>
+                      <th class="column-divider">Certifications</th>
+                      <!-- <th>Location</th> -->
+                  </tr>
+              </thead>
+              <tbody>
+                  {% for row in data %}
+                  <tr>
+                      <td class="column-divider" title="{{ row.name }}">{{ row.name }}</td>
+                      <td class="column-divider" title="{{ row.phone }}">{{ row.phone }}</td>
+                      <td class="column-divider" title="{{ row.email }}">{{ row.email }}</td>
+                      <td class="column-divider" title="{{ row.education }}">{{ row.education }}</td>
+                      <td class="column-divider" title="{{ row.skills }}">{{ row.skills }}</td>
+                      <td class="column-divider" title="{{ row.job_role }}">{{ row.job_role }}</td>
+                      <td class="column-divider" title="{{ row.past_exp }}">{{ row.past_exp }}</td>
+                      <td class="column-divider" title="{{ row.yoe }}">{{ row.yoe }}</td>
+                      <td class="column-divider" title="{{ row.certifications }}">{{ row.certifications }}</td>
+
+                      <!-- <td title="{{ row.Location }}">{{ row.Location }}</td> -->
+                  </tr>
+                  {% endfor %}
+              </tbody>
+          </table>
+      </div>
+      <div class="pagination mt-4">
+          <ul class="pagination justify-content-center">
+              <li class="page-item {% if current_page == 1 %}disabled{% endif %}">
+                  <a class="page-link" href="{{ url_for('available_candidates', page=prev_page) }}">Previous</a>
+              </li>
+              {% for page_num in range(1, total_pages + 1) %}
+              <li class="page-item {% if page_num == current_page %}active{% endif %}">
+                  <a class="page-link" href="{{ url_for('available_candidates', page=page_num) }}">{{ page_num }}</a>
+              </li>
+              {% endfor %}
+              <li class="page-item {% if current_page == total_pages %}disabled{% endif %}">
+                  <a class="page-link" href="{{ url_for('available_candidates', page=next_page) }}">Next</a>
+              </li>
+          </ul>
+      </div>
+  </div>
+</div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="static/scripts/create_JD.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </body>
 </html>

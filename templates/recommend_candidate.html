@@ -11,7 +11,7 @@
     <title>Candidate recommendation</title>
     <style>
          body {
-        background-image: url('./static/BG_Image_2.jpg');
+        background-image: url('./static/BG_Image_2.png');
         background-repeat: no-repeat;
         background-size: cover;
         }
@@ -20,7 +20,7 @@
 <body>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
         <div class="container">
-          <a class="navbar-brand" href="/">HR Analytics</a>
+          <a class="navbar-brand" href="/home">HR Analytics</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -37,6 +37,9 @@
               </li>
               <li class="nav-item active">
                 <a class="nav-link" href="/recommend_candidate">Recommendation</a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" style="color: #e2e59f;" href="/logout">Logout</a>
               </li>
             </ul>
           </div>
@@ -71,26 +74,59 @@
                     </div>
                 </div>  
             </form>
-        </div>
 
-        <div class="container2">
-            <!-- <div class="field">
-                <div class="label">
-                    {% if scores %}
-                        <div>
-                            {{ table|safe }}
-                            {% for s in scores %}
-                            <span class="glowing-txt">{{s}}</span><br>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        Waiting for you to upload job description ...
-                    {% endif %}    
-                </div>
-            </div> -->
-            {{ table|safe }}
+        {% if flag %}
+        <h2 style= "color: #ffffff; font-weight: bold">Recommended Candidates</h2>
+        <form class="formclass" action="/shortlist_candidates" method="post" enctype="multipart/form-data">
+          <div class="field">  
+          <div class="menu-container">                
+            <div class="container mt-4">
+                <div class="table-container">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="column-divider">Name</th>
+                            <th class="column-divider">Email</th>
+                            <th class="column-divider">Phone</th>
+                            <th class="column-divider">Job role</th>
+                            <th class="column-divider">Skills</th>
+                            <th class="column-divider">Desired skills</th>
+                            <th class="column-divider">Matching skills</th>
+                            <th class="column-divider">Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in scores %}
+                        <tr>
+                            <td class="column-divider" title="{{ row.name }}">{{ row.name }}</td>                  
+                            <td class="column-divider" title="{{ row.email }}"><input type="checkbox" name="email_checkbox" value="{{ row.email }}">   {{ row.email }}</td>
+                            <td class="column-divider" title="{{ row.phone }}">{{ row.phone }}</td>                  
+                            <td class="column-divider" title="{{ row.job_role }}">{{ row.job_role }}</td>                  
+                            <td class="column-divider" title="{{ row.skills }}">{{ row.skills }}</td>                  
+                            <td class="column-divider" title="{{ row.desired_skills }}">{{ row.desired_skills }}</td>                  
+                            <td class="column-divider" title="{{ row.matching_skills }}">{{ row.matching_skills }}</td>                  
+                            <td class="column-divider" title="{{ row.relative_score }}">{{ row.relative_score }}</td>                  
+                          </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+              </div>
+              </div>
+
+            <div class="field">
+              <div class="btn-shortlist">
+              <input class='btn mb-2 btn-round btn-primary' type="submit" value="Send email for round 1">
+              </div>
+            </div>
+            </form>
+          </div>
         </div>
+      {% else %}
+        <br>
+        {% endif %}    
     </div>
+  </div>
+
     </body>
     <script src="static/scripts/recommend_candidate.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>

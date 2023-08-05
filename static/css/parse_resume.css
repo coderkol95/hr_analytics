@@ -41,12 +41,24 @@ margin-left: 150px;
 text-align: center;
 color: blanchedalmond;
 }
+.container3{
+  justify-content: center;
+  width: 600px;
+}
+
+.container{
+  justify-content: center;
+  width: 600px;
+}
 
 .field {
 display: flex;
 justify-content: space-between;
 padding: 0.8em 0.4em;
-
+margin-left:80px;
+width: 600px;
+align-items: center;
+margin-left: 50px;
 }
 
 .centerer{
@@ -59,12 +71,23 @@ padding: 0.8em 0.4em;
 .label {
     color: #6b6c6c;
     padding-right: 0.4em;
-    display: block;
+    display: flex;
     justify-content: center;
     align-items: center;
 }
 
+.label2 {
+  color: #6b6c6c;
+  padding-right: 0.4em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 100px;
+}
+
 .box {
+  margin-left: 50px;
+
 }
 
 .jdarea {
@@ -72,8 +95,10 @@ padding: 0.8em 0.4em;
 }
 
 textarea {
-    width: 200px;
-    height:25px;
+  margin-top: 20px;
+    width: 400px;
+    /* height:30px;
+    max-height: 50px; */
     line-height:15px;
     min-width: 200px;
     max-width: 900px;
@@ -82,7 +107,17 @@ textarea {
     overflow:hidden;
 }
 
-.glowing-btn {
+.menu-container {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  width: 850px;
+  margin-left: 50px;
+  margin-top: 0px;
+}
+
+/* .glowing-btn {
     position: relative;
     color: var(--glow-color);
     cursor: pointer;
@@ -102,9 +137,9 @@ textarea {
     box-shadow: inset 0px 0px 0.5em 0px var(--glow-color),
       0px 0px 0.5em 0px var(--glow-color);
     animation: border-flicker 2s linear infinite;
-  }
+  } */
 
-  .glowing-txt {
+  /* .glowing-txt {
     float: center;
     -webkit-text-shadow: 0 0 0.125em hsl(0 0% 100% / 0.3),
       0 0 0.45em var(--glow-color);
@@ -113,13 +148,13 @@ textarea {
     text-shadow: 0 0 0.125em hsl(0 0% 100% / 0.3), 0 0 0.45em var(--glow-color);
     animation: text-flicker 3s linear infinite;
   }
-  
+   */
   /* .faulty-letter {
     opacity: 0.5;
     animation: faulty-flicker 2s linear infinite;
   } */
   
-  .glowing-btn::before {
+  /* .glowing-btn::before {
     content: "";
     position: absolute;
     top: 0;
@@ -129,11 +164,10 @@ textarea {
     opacity: 0.7;
     filter: blur(1em);
     transform: translateY(120%) rotateX(95deg) scale(1, 0.35);
-    /* background: var(--glow-color); */
     pointer-events: none;
-  }
+  } */
   
-  .glowing-btn::after {
+  /* .glowing-btn::after {
     content: "";
     position: absolute;
     top: 0;
@@ -145,26 +179,26 @@ textarea {
     background-color: var(--glow-color);
     box-shadow: 0 0 2em 0.2em var(--glow-color);
     transition: opacity 100ms linear;
-  }
+  } */
   
-  .glowing-btn:hover {
+  /* .glowing-btn:hover {
     color: rgba(0, 0, 0, 0.8);
     text-shadow: none;
     animation: none;
-  }
+  } */
   
-  .glowing-btn:hover .glowing-txt {
+  /* .glowing-btn:hover .glowing-txt {
     animation: none;
   }
-  
-  .glowing-btn:hover:before {
+   */
+  /* .glowing-btn:hover:before {
     filter: blur(1.5em);
     opacity: 1;
-  }
+  } */
   
-  .glowing-btn:hover:after {
+  /* .glowing-btn:hover:after {
     opacity: 1;
-  }
+  } */
   
   @media only screen and (max-width: 600px) {
     .glowing-btn{
@@ -175,14 +209,12 @@ textarea {
   h2 {
     font-size: 36px; 
     font-style: bold; 
-    color: #f1f1f1; 
+    color: #470000; 
     font-weight: bold; 
     font-family: 'Calibri', sans-serif;
-    margin-top: 50px;
     margin-bottom: 10px;
   }
   
-
   .muted-txt{
     font-size: 16px;
   }
@@ -216,9 +248,20 @@ textarea {
     user-select: none;
     border: 1px solid transparent;
     line-height: 1.5;
+    margin-left: 50px;
   }
   
   .btn.btn-primary:hover{
     background-color: #124f78;
   }
   
+  .muted-txt-form{
+    font-size: 16px;
+    color: #fff;
+
+  }
+
+  .centerer2{
+    align-items: center;
+    margin-right: 150px;
+  }

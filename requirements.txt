@@ -48,6 +48,7 @@ pinecone-client==2.2.2
 pyasn1==0.5.0
 pycparser==2.21
 pydantic==1.10.9
+pymongo==4.4.0
 PyMuPDF==1.22.5
 pyOpenSSL==23.2.0
 pypdf==3.10.0

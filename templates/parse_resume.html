@@ -9,9 +9,11 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
-        background-image: url('./static/BG_Image_2.jpg');
-        background-repeat: no-repeat;
+        background-image: url('./static/BG_Image_2.png');
         background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
         }
       </style>
     <title>Parse resume</title>
@@ -19,7 +21,7 @@
 <body>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
         <div class="container">
-          <a class="navbar-brand" href="/">HR Analytics</a>
+          <a class="navbar-brand" href="/home">HR Analytics</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -37,6 +39,9 @@
               <li class="nav-item active">
                 <a class="nav-link" href="/recommend_candidate">Recommendation</a>
               </li>
+              <li class="nav-item active">
+                <a class="nav-link" style="color: #e2e59f;" href="/logout">Logout</a>
+              </li>
             </ul>
           </div>
         </div>
@@ -44,17 +49,18 @@
 
     <div class="page">
         <div class="container">
-            <div class="field">
-                <!-- <div class="centerer">
+            <div class="menu-container">
+            <h2 align="center">Parse Resume</h2>    
+            <!-- <div class="field">
+                <div class="centerer">
                     <button class='btn mb-2 mb-m-0 btn-round btn-primary btn-block' onclick="window.location='/'"><span class='glowing-txt'>Homepage</span></button>
-                </div> -->
-            </div>     
-            <h2 align="center">Parse Resume</h2>       
+                </div>
+            </div>         -->
             <form name="parse_resume" class="formclass" enctype="multipart/form-data" action="/parse_resume" method="post">
 
                 <div class="field">
-                    <div class="label">
-                        <input type="file" name="file" id="file" accept=".pdf" required>
+                    <div class="label2">
+                        <input type="file" name="file" id="file" accept=".pdf" required multiple>
                     </div>
                     <div class="box">  
                         <button class='btn mb-2 mb-m-0 btn-round btn-primary btn-block'><span onclick="parse_resume.submit()" class='muted-txt'>Parse resume</span></button>   
@@ -66,12 +72,13 @@
         <div class="container">
             <div class="field">
                 <div class="label">
-                    {% if response %}
+                    {% if responses %}
+                    {% for response in responses %}
                     <div class="container">
                         <div class="formclass">
                             <div class="field">
                                 <div class="label">
-                                    <label for="name"><span class='muted-txt'>Name:</span></label>
+                                    <label for="name"><span class='muted-txt-form'>Name:</span></label>
                                 </div>
                                 <div class="box">     
                                     <textarea id="name" data-autosize-input='{ "space": 40 }' name="name" onmouseover="adjustTextareaHeight('name')" required>{{response.name}}</textarea>
@@ -80,7 +87,7 @@
 
                             <div class="field">
                                 <div class="label">
-                                    <label for="phone"><span class='muted-txt'>Phone no.:</span></label>
+                                    <label for="phone"><span class='muted-txt-form'>Phone no.:</span></label>
                                 </div>
                                 <div class="box">     
                                     <textarea id="phone" data-autosize-input='{ "space": 40 }' name="phone" onmouseover="adjustTextareaHeight('phone')" required>{{response.phone}}</textarea>
@@ -89,7 +96,7 @@
 
                             <div class="field">
                                 <div class="label">
-                                    <label for="email"><span class='muted-txt'>Email ID:</span></label>
+                                    <label for="email"><span class='muted-txt-form'>Email ID:</span></label>
                                 </div>
                                 <div class="box">     
                                     <textarea id="email" data-autosize-input='{ "space": 40 }' name="email" onmouseover="adjustTextareaHeight('email')" required>{{response.email}}</textarea>
@@ -98,7 +105,7 @@
 
                             <div class="field">
                                 <div class="label">
-                                    <label for="skills"><span class='muted-txt'>Skills:</span></label>
+                                    <label for="skills"><span class='muted-txt-form'>Skills:</span></label>
                                 </div>
                                 <div class="box">     
                                     <textarea id="skills" data-autosize-input='{ "space": 40 }' name="skills" onmouseover="adjustTextareaHeight('skills')" required>{{response.skills}}</textarea>
@@ -107,7 +114,7 @@
 
                             <div class="field">
                                 <div class="label">
-                                    <label for="past_exp"><span class='muted-txt'>Past job experience:</span></label>
+                                    <label for="past_exp"><span class='muted-txt-form'>Past job experience:</span></label>
                                 </div>
                                 <div class="box">     
                                     <textarea id="past_exp" data-autosize-input='{ "space": 40 }' name="past_exp" onmouseover="adjustTextareaHeight('past_exp')" required>{{response.past_exp}}</textarea>
@@ -116,7 +123,7 @@
 
                             <div class="field">
                                 <div class="label">
-                                    <label for="education"><span class='muted-txt'>Educational qualifications:</span></label>
+                                    <label for="education"><span class='muted-txt-form'>Educational qualifications:</span></label>
                                 </div>
                                 <div class="box">     
                                     <textarea id="education" data-autosize-input='{ "space": 40 }' name="education" onmouseover="adjustTextareaHeight('education')" required>{{response.education}}</textarea>
@@ -125,7 +132,7 @@
 
                             <div class="field">
                                 <div class="label">
-                                    <label for="certifications"><span class='muted-txt'>Certifications:</span></label>
+                                    <label for="certifications"><span class='muted-txt-form'>Certifications:</span></label>
                                 </div>
                                 <div class="box">     
                                     <textarea id="certifications" data-autosize-input='{ "space": 40 }' name="certifications" onmouseover="adjustTextareaHeight('certifications')" required>{{response.certifications}}</textarea>
@@ -133,7 +140,7 @@
                             </div>
                             <div class="field">
                                 <div class="label">
-                                    <label for="job_role"><span class='muted-txt'>Identified job role:</span></label>
+                                    <label for="job_role"><span class='muted-txt-form'>Identified job role:</span></label>
                                 </div>
                                 <div class="box">     
                                     <textarea id="job_role" data-autosize-input='{ "space": 40 }' name="job_role" onmouseover="adjustTextareaHeight('job_role')" required>{{response.job_role}}</textarea>
@@ -141,25 +148,25 @@
                             </div>
                             <div class="field">
                                 <div class="label">
-                                    <label for="yoe"><span class='muted-txt'>Years of experience:</span></label>
+                                    <label for="yoe"><span class='muted-txt-form'>Years of experience:</span></label>
                                 </div>
                                 <div class="box">     
                                     <textarea id="yoe" data-autosize-input='{ "space": 40 }' name="yoe" onmouseover="adjustTextareaHeight('yoe')" required>{{response.yoe}}</textarea>
+                                    <div class="centerer2">
+                                        <!-- btn mb-2 mb-m-0 btn-round btn-primary btn-block -->
+                                        <button class='btn mb-2 mb-m-0 btn-round btn-primary btn-block' style="margin-top: 20px;" onclick="save_parsed_resume()"><span class='muted-txt'>Save parsed resume</span></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="centerer">
-                        <button class='btn mb-2 mb-m-0 btn-round btn-primary btn-block' onclick="save_parsed_resume()"><span class='muted-txt'>Save parsed resume</span></button>
-                    </div>
-
-                    {% else %}
-                        Waiting for you to upload resume ...
-                    {% endif %}    
+                    {% endfor %}
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
+</div>
     </body>
     <script src="static/scripts/parse_resume.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
