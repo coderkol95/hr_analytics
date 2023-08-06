@@ -65,6 +65,7 @@
           <table class="table table-bordered">
               <thead>
                   <tr>
+                      <th class="column-divider">Job Id</th>
                       <th class="column-divider">Name</th>
                       <th class="column-divider">Phone</th>
                       <th class="column-divider">Email</th>
@@ -80,6 +81,7 @@
               <tbody>
                   {% for row in data %}
                   <tr>
+                      <td class="column-divider" title="{{ row.name }}">{{ row.requisition_id }}</td>
                       <td class="column-divider" title="{{ row.name }}">{{ row.name }}</td>
                       <td class="column-divider" title="{{ row.phone }}">{{ row.phone }}</td>
                       <td class="column-divider" title="{{ row.email }}">{{ row.email }}</td>

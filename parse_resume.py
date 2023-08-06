@@ -49,3 +49,32 @@ class Resume:
 
         prompt+=prompt+"\n\n"+"#"+resume_content+"#"
         return prompt
+    
+    # def _createPrompt(self):
+    #     text_list = self._pdf_to_text()
+    #     resume_content = ".".join(text_list)
+    #     prompt= f'''
+    #             Your job is of a Resume Parser. From the resume information given inside the delimiter #,
+    #             you shall find out the details such as Name, contact number, email id and other profile links,phone number, skillsets, past job experience. 
+    #             Once you find them out you need to show them in pointwise manner.  
+    #             Keep it short and precise. 
+    #             Do not generate anything unnecessary and Do not generate anything on your own that is not in the context.
+    #             Here is the JSON Schema instance your output must adhere to:
+    #             "'json':
+    #             [{{
+    #             'requisition_id':'99D999S9G9',
+    #             'name':'John Doe',
+    #             'phone':'+91 0009991111',
+    #             'email':'myemail@email.com',
+    #             'skills':'python,sql,machine learning, web development, blockchain, cyber security',
+    #             'past_exp':'5 years at Google as AI engineer, 5 years at Uber as product manager',
+    #             'education':'BE in Computer Science at MIT, ME in AI at Stanford University',
+    #             'certifications':'AWS Solution Architect',
+    #             'job_role':'Data Scientist',
+    #             'yoe':'10'
+    #             }}]
+    #             "
+    #             If any of the key information is not found from the context, return Not Mentioned in Resume.
+    #             Resume Content : # {resume_content} #
+    #             '''.replace("\n","").replace("  ","")
+    #     return prompt

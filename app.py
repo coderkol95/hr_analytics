@@ -146,6 +146,8 @@ def recommend_candidate():
         parsed_resumes = pd.DataFrame(data)
         ## parsed_resumes=pd.read_csv('./parsed_resumes.csv') ## Not a best practice , just an alternative
         job_roles=list(parsed_resumes['job_role'].unique())
+        fetch = jd_collection.find({},{'requisition_id'})
+        requisition_ids=pd.DataFrame(fetch)['requisition_id'].to_list()
         if request.method=="POST":
             job_desc = request.form['job_desc']
             try:
@@ -154,49 +156,67 @@ def recommend_candidate():
                 selected_roles = job_roles
             
             # Will work when API key is available
-            # best_candidates = score_candidates(job_desc, selected_roles)
-            best_candidates = pd.DataFrame(data=[['a1','b1','c1','d1','e1','f1','g1','h1'],['a2','b2','c2','d2','e2','f2','g2','h2']], columns=['name','phone','email','job_role','skills','desired_skills','matching_skills','relative_score'])
+            best_candidates = score_candidates(job_desc, selected_roles)
+            #best_candidates = pd.DataFrame(data=[['a1','b1','c1','d1','e1','f1','g1','h1'],['a2','b2','c2','d2','e2','f2','g2','h2']], columns=['name','phone','email','job_role','skills','desired_skills','matching_skills','relative_score'])
 
-            return render_template("recommend_candidate.html", job_roles=job_roles, scores=best_candidates.to_dict(orient='records'), flag=True)
+            return render_template("recommend_candidate.html", job_roles=job_roles, requisition_ids=requisition_ids,
+                                   scores=best_candidates.to_dict(orient='records'), flag=True)
     else:
         return redirect("/")
 
-    return render_template("recommend_candidate.html", job_roles=job_roles, flag=False)
+    return render_template("recommend_candidate.html", job_roles=job_roles,requisition_ids=requisition_ids, flag=False)
 
+req_id = None
+req_ids = []  ## needed to keep track of the memory of req ids
 @app.route("/parse_resume", methods=['GET','POST'])
 def parse_resume():
-    if request.method=="POST":
-        if "user_id" in session:
+    if "user_id" in session:
+        fetch = jd_collection.find({},{'requisition_id'})
+        requisition_ids=pd.DataFrame(fetch)['requisition_id'].to_list()
+        global req_ids
+        global req_id
+        if request.method=="POST":
             files = request.files.getlist('file')
+            req_id = request.form.get('selected_option', None)
+            req_ids.append(req_id)
             response_list=[]
             for file in files:
                 filename = secure_filename(file.filename)
-                pdf_path = 'uploads/' + filename
-                file.save(pdf_path)
+                ### pdf_path : Anupam
+                # pdf_path = 'uploads/' + filename   
+                ### pdf_path : KD
+                pdf_path = '.\\uploads\\' + filename   
+                # file.save(pdf_path)
                 response = parseResume(pdf_path)  ## dictionary
+                # It needs to be done so that we may get the mapping of req_id and candidate mail id 
+                response.update({'requisition_id':req_ids[0]})
                 response_list.append(response)    ## 
+                print(response_list)
 
             # parsed_resume=pd.read_csv("parsed_resumes.csv")
             # parsed_resume.to_csv('parsed_resumes.csv',index=False)
             
-            return render_template("parse_resume.html", responses=response_list)
-        else:
-            return redirect("/")
+            return render_template("parse_resume.html", requisition_ids = requisition_ids,
+                                                        responses=response_list)
 
-    return render_template("parse_resume.html")
+        return render_template("parse_resume.html",requisition_ids = requisition_ids,)
+    else:
+        return redirect("/")
+
 
 @app.route("/save_parsed_resume", methods=["POST"])
 def save_parsed_resume():
-    if request.method=="POST":
-        # Currently just adding a new row every time a resume is parsed
-        global collection
-        response=request.get_json()
-        collection.insert_one(response)
-        data=collection.find()   ## will fetch all the parsed resume data
-        df = pd.DataFrame(data)
-        ### Optional Step: Not recommended for building a scalable solution
-        df.to_csv('parsed_resumes.csv')  
-        return 'OK', 200
+    if "user_id" in session:
+        if request.method=="POST":
+            # Currently just adding a new row every time a resume is parsed
+            global collection
+            response = request.get_json()
+            collection.insert_one(response)
+            # data=collection.find()   ## will fetch all the parsed resume data
+            # df = pd.DataFrame(data)
+            ### Optional Step: Not recommended for building a scalable solution
+            ## df.to_csv('parsed_resumes.csv')  
+            return 'OK', 200
     else:
         return redirect("/")
 

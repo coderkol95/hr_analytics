@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
         background-image: url('./static/BG_Image_2.png');
@@ -50,14 +51,21 @@
     <div class="page">
         <div class="container">
             <div class="menu-container">
-            <h2 align="center">Parse Resume</h2>    
+            <h2 align="center"  style= "color: #520404; font-weight: bold">Parse Resume</h2><br>
             <!-- <div class="field">
                 <div class="centerer">
                     <button class='btn mb-2 mb-m-0 btn-round btn-primary btn-block' onclick="window.location='/'"><span class='glowing-txt'>Homepage</span></button>
                 </div>
             </div>         -->
+            <div class="form-group" >
+                <select class="form-control" id="optionSelect" required>
+                    <option value="" disabled selected>Select Requisition ID</option>
+                    {% for value in requisition_ids %}
+                    <option value="{{value}}">{{value}}</option>
+                    {% endfor %}
+                </select>
+            </div>
             <form name="parse_resume" class="formclass" enctype="multipart/form-data" action="/parse_resume" method="post">
-
                 <div class="field">
                     <div class="label2">
                         <input type="file" name="file" id="file" accept=".pdf" required multiple>
@@ -66,9 +74,9 @@
                         <button class='btn mb-2 mb-m-0 btn-round btn-primary btn-block'><span onclick="parse_resume.submit()" class='muted-txt'>Parse resume</span></button>   
                     </div>
                 </div>
+            </div>
             </form>
-        </div>
-
+        <br>
         <div class="container">
             <div class="field">
                 <div class="label">
@@ -76,6 +84,15 @@
                     {% for response in responses %}
                     <div class="container">
                         <div class="formclass">
+                            <div class="field">
+                                <div class="label">
+                                    <label for="requisition_id"><span class='muted-txt-form'>Requisition ID:</span></label>
+                                </div>
+                                <div class="box">     
+                                    <textarea id="requisition_id" data-autosize-input='{ "space": 40 }' name="requisition_id" onmouseover="adjustTextareaHeight('requisition_id')" required>{{response.requisition_id}}</textarea>
+                                </div>
+                            </div>
+
                             <div class="field">
                                 <div class="label">
                                     <label for="name"><span class='muted-txt-form'>Name:</span></label>
@@ -166,8 +183,39 @@
             </div>
         </div>
     </div>
-</div>
+    </div>
     </body>
+    <script>
+        function toggleDropdown() {
+          var dropdownContent = document.getElementById("myDropdown");
+          dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
+        }
+      </script>
+    <script>
+         // JavaScript to handle the dropdown selection and send the data to the backend
+         document.getElementById('optionSelect').addEventListener('change', function(event) {
+                event.preventDefault();
+                const selectedOption = this.value;
+                fetch('/parse_resume', {
+                    method: 'POST',
+                    body: new URLSearchParams({
+                        'selected_option': selectedOption
+                    }),
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                }).then(response => {
+                    if (response.ok) {
+                        return response.text();
+                    }
+                    throw new Error('Network response was not ok.');
+                }).then(responseText => {
+                    console.log(responseText);
+                }).catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+    </script>
     <script src="static/scripts/parse_resume.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </body>

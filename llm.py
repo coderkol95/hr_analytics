@@ -1,5 +1,6 @@
 import openai
 import os
+import requests
 from parse_resume import Resume
 import pandas as pd
 import re
@@ -51,6 +52,7 @@ def parseResume(pdf_path):
     # resume_data=[x.split(':') for x in answer.split("\n\n") if x!='']
     # resume_dict=dict(zip([x[0] for x in resume_data],[x[1:] for x in resume_data]))
     resume_dict=json.loads(answer[10:])
+    print(resume_dict)
     name = resume_dict['name']
     phone = resume_dict['contact_number']
     email = resume_dict['email_id']
@@ -150,3 +152,8 @@ def score_candidates(job_desc, job_role):
 #     # recom['Score']=recom['Score'].apply(lambda x: x[6:])
 
 #     return answer.split("\n")
+
+# pdf_path = ".\\uploads\\Aditya_Soni_Resume.pdf"
+# prompt = Resume(pdf_path)._createPrompt()
+# print(prompt)
+# print(ParseResume().parse(prompt))

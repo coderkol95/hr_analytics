@@ -5,10 +5,8 @@ function adjustTextareaHeight(ident) {
   }
 
 function save_parsed_resume(i) {
-
-
-
   var textareaValues = {
+    'requisition_id': $('#requisition_id').val(),
     'name': $('#name').val(),
     'phone': $('#phone').val(),
     'email': $('#email').val(),

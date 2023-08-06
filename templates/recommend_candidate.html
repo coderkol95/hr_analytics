@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="static/css/recommend_candidate.css">
     <title>Candidate recommendation</title>
     <style>
@@ -52,21 +53,28 @@
             <div class="field">
                 <div class="centerer">
                     <h2 align="center"  style= "color: #520404; font-weight: bold">Candidate Recommendation</h2>
+                    <div class="form-group" >
+                      <select class="form-control" id="optionSelect1" required>
+                          <option value="" disabled selected>Job Role</option>
+                          {% for value in job_roles %}
+                          <option value="{{value}}">{{value}}</option>
+                          {% endfor %}
+                      </select>
+                  </div>
+
+                  <div class="form-group" >
+                    <select class="form-control" id="optionSelect2" required>
+                        <option value="" disabled selected>Requisition ID</option>
+                        {% for value in requisition_ids %}
+                        <option value="{{value}}">{{value}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
                     <!-- <button class='glowing-btn' onclick="window.location='/'"><span class='glowing-txt'>Homepage</span></button> -->
                 </div>
             </div>      
             <div class="container3">
-              <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Job Role
-                </button>
-                <div id="myDropdown" class="dropdown-content" aria-labelledby="dropdownMenuButton">
-                  {% for value in job_roles %}
-                  <input type="checkbox" class='glowing-btn' name="selected_values" value=" {{ value }}"><span style="color: rgb(73, 73, 73);">  {{ value }}</span><br>
-                  {% endfor %}
-                </div>
-              </div>
-              <div class="dropdown">
+              <!-- <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Requisition ID
                 </button>
@@ -75,8 +83,8 @@
                   <input type="checkbox" class='glowing-btn' name="selected_values" value=" {{ value }}"><span style="color: rgb(73, 73, 73);">  {{ value }}</span><br>
                   {% endfor %}
                 </div>
-              </div>
-            </div>  
+              </div> 
+            </div>  -->
             <form name="recommend_candidate" class="formclass" enctype="multipart/form-data" action="/recommend_candidate" method="post">
               
                 <div class="field">
@@ -137,13 +145,39 @@
             </div>
             </form>
           </div>
+          <script>
+            // JavaScript to handle the dropdown selection and send the data to the backend
+            function handleDropdownChange(event) {
+                event.preventDefault();
+                const selectedOption = this.value;
+                fetch('/recommend_candidate', {
+                    method: 'POST',
+                    body: new URLSearchParams({
+                        'selected_option': selectedOption
+                    }),
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                }).then(response => {
+                    if (response.ok) {
+                        return response.text();
+                    }
+                    throw new Error('Network response was not ok.');
+                }).then(responseText => {
+                    console.log(responseText);
+                }).catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+
+            // Add event listeners to both dropdowns
+            document.getElementById('optionSelect1').addEventListener('change', handleDropdownChange);
+            document.getElementById('optionSelect2').addEventListener('change', handleDropdownChange);
+        </script>
         </div>
       {% else %}
         <br>
-        {% endif %}    
-    </div>
-  </div>
-</div>
+        {% endif %}   
 
     </body>
     <script>
