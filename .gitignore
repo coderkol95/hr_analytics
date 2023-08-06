@@ -5,12 +5,14 @@ uploads/*
 .ipynb_checkpoints
 parsed_resumes_old.csv
 test.html
+test_2.html
+test_3.html
 app_old.py
 auth.py
-test_2.html
 docker_notes.ipynb
 requirements_2.txt
 requirements_conda.txt
 test_kd.ipynb
+test.ipynb
 /static/BG_Image_1-assets
 /static/BG_Image_2-assets
