@@ -23,3 +23,12 @@
 [x] Score resumes as a system
 [ ] Match with tick for each matching skill/experience/etc
 [ ] Need to prepare a dashboard with graphs, ranking and ticks
+
+Points of Improvements :
+1. Create JD Page (Must do): 
+    -  When clicked on the Create JD button , it creates the JD but it also resets the input fields. Because of this we are not able to push the requision id in the backend and it returns "": DONE 
+    -  When clicked on the save job description button , it shall return the requisition id and the job description both in the flask backend. Then we can store them in mongoDB. We would have to reference the requisition ID later for candidate recommendation and available candidates : DONE 
+    - When user clicks on save job description button, when it gets stored in the backend then user shall get a pop up like it has been stored to the database:
+
+    
+    
