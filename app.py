@@ -5,13 +5,13 @@ import bcrypt
 import pymongo
 import warnings
 import pandas as pd
-import mysql
+import mysql.connector
 from dotenv import load_dotenv
 warnings.filterwarnings('ignore')
 from werkzeug.utils import secure_filename
 from llm import generate_jd, parseResume, score_candidates
-from shortlist_candidate import CandidateCredentials , ResumeQnAGenerator 
 from flask import Flask, render_template, request, url_for, redirect, session, jsonify
+from shortlist_candidate import CandidateCredentials , ResumeQnAGenerator ,JDQnAGenerator
 
 load_dotenv()
 app = Flask(__name__)
@@ -31,6 +31,7 @@ cursor = conn.cursor()
 
 ## getting the mongoDB Collection: DataBase Name : Resume , Collection Name : Resume
 collection  = pymongo.MongoClient( os.getenv("MONGO_URI") )['Resume']['Resume']
+jd_collection = pymongo.MongoClient( os.getenv("MONGO_URI") )['Resume']['JD']
 
 @app.route("/")
 def home():
@@ -131,7 +132,7 @@ def create_JD():
             requisition_id = request.form['requisition_id']
             jd_from_openai = generate_jd(metadata,designation,min_education,experience,responsibilities,techstack,other_tools,role_type,role_location, requisition_id)
 
-            return render_template("create_JD.html", generated_jd=jd_from_openai)
+            return render_template("create_JD.html", generated_jd=jd_from_openai, requisition_id = requisition_id)
     else:
         return redirect("/")
 
@@ -201,32 +202,71 @@ def save_parsed_resume():
 
 @app.route("/save_job_desc", methods=['GET','POST'])
 def save_job_desc():
-
-    if request.method=="POST":
+    if "user_id" in session:
         if request.method=="POST":
-
-            job_desc = request.get_json()
-            print(job_desc)
-            # Write out to file
-            return 'OK', 200
+            user_input_jd = request.get_json()
+            job_desc = user_input_jd['job_description']
+            req_id = str(user_input_jd['requisition_id'])
+            #print(job_desc)
+            print(req_id)
+            record = {"requisition_id":req_id, "job_description":job_desc}
+            filter_={"requisition_id":req_id}
+            query_result = jd_collection.find(filter_) 
+            d = pd.DataFrame(query_result)
+            try:
+                if len(d) == 0:
+                    jd_collection.insert_one(record)
+                    return {"success": True}
+                else:
+                    jd_collection.update_one({"requisition_id": req_id},
+                            {"$set": {"job_description": job_desc}})
+                    return {"success": True}
+            except:
+                return {"success": False}
         else:
             return redirect("/")
+                
+    else:
+        return redirect("/")
         
 @app.route("/shortlist_candidates", methods=['GET','POST'])
 def shortlist_candidates():
     if request.method=="POST":
         if "user_id" in session:
-            ### Hard-coded  as of now : But the logic is to be built where we get a list of emails for shortlisted candidates
-            
             emails = request.form.getlist('email_checkbox')
-            print(emails)
             for email in emails:
-                upsert_candidate = CandidateCredentials(db_config).create_candidate_credentials(email)
-                
-                # if upsert_candidate !=None:
-                DescriptiveQnAGenerator(email).insertDescriptiveQAforCandidate()
-                # else:
-                    # return jsonify("Error during candidate credential creation")
+                    try:
+                        jd = "It needs to come from somewhere"
+                        candidate_credentials_obj = CandidateCredentials(db_config)
+                        ## Creating PW for the candidate to login in test portal
+                        candidate_credentials_obj.create_candidate_credentials(email)
+
+                        resume_qna_obj = ResumeQnAGenerator(email)
+                        resume_objective_question_prompt = resume_qna_obj.promptMCQs()
+                        resume_subjective_question_prompt =  resume_qna_obj.promptDescriptiveQuestions()
+
+                        if resume_objective_question_prompt:
+                            resume_objective_questions = resume_qna_obj.askGPT(resume_objective_question_prompt)
+                            resume_qna_obj.insertMCQAforCandidate(resume_objective_questions)
+                        if resume_subjective_question_prompt:
+                            resume_subjective_questions = resume_qna_obj.askGPT(resume_subjective_question_prompt)
+                            resume_qna_obj.insertDescriptiveQAforCandidate(resume_subjective_questions)
+
+                        jd_qna_obj = JDQnAGenerator(email, jd)
+                        jd_objective_question_prompt = jd_qna_obj.promptMCQsfromJD()
+                        jd_subjective_question_prompt =  jd_qna_obj.promptDescriptiveQuestionsfromJD()
+
+                        if jd_objective_question_prompt:
+                            jd_objective_questions = jd_qna_obj.askGPT(jd_objective_question_prompt)
+                            jd_qna_obj.insertMCQAforCandidate(jd_objective_questions)
+                        if jd_subjective_question_prompt:
+                            jd_subjective_questions = jd_qna_obj.askGPT(jd_subjective_question_prompt)
+                            jd_qna_obj.insertDescriptiveQAforCandidate(jd_subjective_questions)
+
+
+                    except Exception as e:
+                        return jsonify(f"Cannot create Resume/JD questions for {email}", e)
+                    
                  
     return redirect("/")
 
