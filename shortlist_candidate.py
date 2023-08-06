@@ -1,11 +1,11 @@
 import os 
 import uuid
-import mysql
 import openai
 import smtplib
 import pymongo
 import requests
 import pandas as pd
+import mysql.connector
 from dotenv import load_dotenv
 from email.mime.text import MIMEText
 
