@@ -41,6 +41,8 @@ Points of Improvements :
     - When Req ID is selected the job desc speficif to that req_id must appear in the text box 
     - Better candidate filter and scoring 
     - Remove pinecone and use any inhouse DB
+5. General:
+    - After every save , there should be one pop up indicating that save to the user.
 
 
     
