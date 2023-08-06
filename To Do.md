@@ -30,18 +30,5 @@ Points of Improvements :
     -  When clicked on the save job description button , it shall return the requisition id and the job description both in the flask backend. Then we can store them in mongoDB. We would have to reference the requisition ID later for candidate recommendation and available candidates : DONE 
     - When user clicks on save job description button, when it gets stored in the backend then user shall get a pop up like it has been stored to the database:
 
-2. Parse Resume(Must Do):
-    - Create a dropdown list of all the requisition ids available and parse the resume of the candidate based on that requisition ID only so that we can get the idea of which candidate applied for which requisition id - DONE
-
-3. Candidate DB:
-    - Add the Job ID field against each candidate - DONE 
-
-4. Recommend Candidate :
-    - Add filters in a better way UI  - Half Done
-    - When Req ID is selected the job desc speficif to that req_id must appear in the text box 
-    - Better candidate filter and scoring 
-    - Remove pinecone and use any inhouse DB
-
-
     
     
