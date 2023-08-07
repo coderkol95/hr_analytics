@@ -6,10 +6,59 @@
   <title>Recruitment Table</title>
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+    background-image: url('./static/BG_Image_2.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    }
+    .menu-container {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+    width: 1000px;
+    height: 600px;
+    margin: 0 auto;
+    margin-top: 100px;
+    }
+  </style>
 </head>
 <body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="/home">HR Analytics</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="/create_JD">Create JD</a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="/show_jd">Show JD</a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="/parse_resume">Parse Resume</a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="/available_candidates">Candidate DB</a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="/recommend_candidate">Recommendation</a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" style="color: #e2e59f;" href="/logout">Logout</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+<div class="menu-container">
   <div class="container mt-5">
     <h2  align="center" style= "color: #520404; font-weight: bold">Recruitment Pipeline</h2>
+    <br>
     <table class="table table-striped">
       <thead>
         <tr>
@@ -28,7 +77,7 @@
         <tr>
           <td contenteditable="false">{{row.req_id}}</td>
           <td contenteditable="false">{{row.name}}</td>
-          <td contenteditable="false">{{row.email}}</td>
+          <td contenteditable="false"class="column-divider" title="{{ row.email }}"><input type="checkbox" name="email_checkbox" value="{{ row.email }}">   {{ row.email }}</td>
           <td contenteditable="false">{{row.phone}}</td>
           <td contenteditable="false">{{row.status}}</td>
           <td contenteditable="false">{{row.test_score}}</td>
@@ -42,6 +91,7 @@
       </tbody>
     </table>
   </div>
+</div>
 
   <!-- Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

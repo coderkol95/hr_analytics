@@ -9,6 +9,7 @@ import mysql.connector
 from dotenv import load_dotenv
 warnings.filterwarnings('ignore')
 from werkzeug.utils import secure_filename
+from email_candidate import EmailCandidate
 from llm import generate_jd, parseResume, score_candidates
 from flask import Flask, render_template, request, url_for, redirect, session, jsonify
 from shortlist_candidate import CandidateCredentials , ResumeQnAGenerator ,JDQnAGenerator
@@ -137,7 +138,6 @@ def show_jd():
 
 @app.route("/create_JD", methods=['GET','POST'])
 def create_JD():
-
     if "user_id" in session:
         if request.method=="POST":
             metadata=request.form['metadata']
@@ -176,7 +176,7 @@ def recommend_candidate():
             
             # Will work when API key is available
             #best_candidates = score_candidates(job_desc, selected_roles)
-            best_candidates = pd.DataFrame(data=[['a1','b1','c1','d1','e1','f1','g1','h1'],['a2','b2','c2','d2','e2','f2','g2','h2']], columns=['name','phone','email','job_role','skills','desired_skills','matching_skills','relative_score'])
+            best_candidates = pd.DataFrame(data=[['a1','b1','krishnendudey21@gmail.com','d1','e1','f1','g1','h1'],['a2','b2','c2','d2','e2','f2','g2','h2']], columns=['name','phone','email','job_role','skills','desired_skills','matching_skills','relative_score'])
 
             return render_template("recommend_candidate.html", job_roles=job_roles, requisition_ids=selected_requisition_ids,
                                    scores=best_candidates.to_dict(orient='records'), flag=True)
@@ -271,18 +271,16 @@ def save_job_desc():
         
 @app.route("/shortlist_candidates", methods=['GET','POST'])
 def shortlist_candidates():
-    if request.method=="POST":
-        if "user_id" in session:
+    if "user_id" in session:
+        if request.method=="POST":
             emails = request.form.getlist('email_checkbox')
             for email in emails:
                     try:
-                        # jd = "It needs to come from somewhere"
+                        jd = "It needs to come from somewhere"
                         candidate_credentials_obj = CandidateCredentials(db_config)
                         ## Creating PW for the candidate to login in test portal
                         candidate_credentials_obj.create_candidate_credentials(email)
-                        candidate_qna.update_one({"email": email}, 
-                                                 {"$set": {"status": "Assessment Initiated"}})
-
+                        print("Success !!! Candidate's Login Credentials are created")
                         resume_qna_obj = ResumeQnAGenerator(email)
                         resume_objective_question_prompt = resume_qna_obj.promptMCQs()
                         resume_subjective_question_prompt =  resume_qna_obj.promptDescriptiveQuestions()
@@ -290,10 +288,13 @@ def shortlist_candidates():
                         if resume_objective_question_prompt:
                             resume_objective_questions = resume_qna_obj.askGPT(resume_objective_question_prompt)
                             resume_qna_obj.insertMCQAforCandidate(resume_objective_questions)
+                            print("Success !!! MCQs are generated")
                         if resume_subjective_question_prompt:
                             resume_subjective_questions = resume_qna_obj.askGPT(resume_subjective_question_prompt)
                             resume_qna_obj.insertDescriptiveQAforCandidate(resume_subjective_questions)
+                            print("Success !!! Subjectives are Generated")
 
+                        ### Good to have but will see later.
                         # jd_qna_obj = JDQnAGenerator(email, jd)
                         # jd_objective_question_prompt = jd_qna_obj.promptMCQsfromJD()
                         # jd_subjective_question_prompt =  jd_qna_obj.promptDescriptiveQuestionsfromJD()
@@ -305,6 +306,20 @@ def shortlist_candidates():
                         #     jd_subjective_questions = jd_qna_obj.askGPT(jd_subjective_question_prompt)
                         #     jd_qna_obj.insertDescriptiveQAforCandidate(jd_subjective_questions)
 
+                        candidate_qna.update_one({"email": email}, 
+                                                 {"$set": {"status": "Assessment Initiated"}})
+                        print("Success !!! Candidate's status is updated")
+
+                        mail_obj = EmailCandidate()
+                        mail_obj.inviteCandidateforAssessment(email)
+                        print(email)
+                        print("Success !!! Candidate's is sent email for assessment")
+
+                        df_data = candidate_qna.find()
+                        df_dict = pd.DataFrame(df_data).to_dict(orient='records')
+
+                        return render_template("recruitment_journey.html", data=df_dict)
+                    
                     except Exception as e:
                         return jsonify(f"Cannot create Resume questions for {email}", e)
                                      
