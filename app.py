@@ -32,6 +32,7 @@ cursor = conn.cursor()
 ## getting the mongoDB Collection: DataBase Name : Resume , Collection Name : Resume
 collection  = pymongo.MongoClient( os.getenv("MONGO_URI") )['Resume']['Resume']
 jd_collection = pymongo.MongoClient( os.getenv("MONGO_URI") )['Resume']['JD']
+candidate_qna = pymongo.MongoClient(os.getenv("MONGO_URI") )['Resume']['Candidate_QnA']
 
 @app.route("/")
 def home():
@@ -275,10 +276,12 @@ def shortlist_candidates():
             emails = request.form.getlist('email_checkbox')
             for email in emails:
                     try:
-                        jd = "It needs to come from somewhere"
+                        # jd = "It needs to come from somewhere"
                         candidate_credentials_obj = CandidateCredentials(db_config)
                         ## Creating PW for the candidate to login in test portal
                         candidate_credentials_obj.create_candidate_credentials(email)
+                        candidate_qna.update_one({"email": email}, 
+                                                 {"$set": {"status": "Assessment Initiated"}})
 
                         resume_qna_obj = ResumeQnAGenerator(email)
                         resume_objective_question_prompt = resume_qna_obj.promptMCQs()
@@ -291,23 +294,46 @@ def shortlist_candidates():
                             resume_subjective_questions = resume_qna_obj.askGPT(resume_subjective_question_prompt)
                             resume_qna_obj.insertDescriptiveQAforCandidate(resume_subjective_questions)
 
-                        jd_qna_obj = JDQnAGenerator(email, jd)
-                        jd_objective_question_prompt = jd_qna_obj.promptMCQsfromJD()
-                        jd_subjective_question_prompt =  jd_qna_obj.promptDescriptiveQuestionsfromJD()
+                        # jd_qna_obj = JDQnAGenerator(email, jd)
+                        # jd_objective_question_prompt = jd_qna_obj.promptMCQsfromJD()
+                        # jd_subjective_question_prompt =  jd_qna_obj.promptDescriptiveQuestionsfromJD()
 
-                        if jd_objective_question_prompt:
-                            jd_objective_questions = jd_qna_obj.askGPT(jd_objective_question_prompt)
-                            jd_qna_obj.insertMCQAforCandidate(jd_objective_questions)
-                        if jd_subjective_question_prompt:
-                            jd_subjective_questions = jd_qna_obj.askGPT(jd_subjective_question_prompt)
-                            jd_qna_obj.insertDescriptiveQAforCandidate(jd_subjective_questions)
-
+                        # if jd_objective_question_prompt:
+                        #     jd_objective_questions = jd_qna_obj.askGPT(jd_objective_question_prompt)
+                        #     jd_qna_obj.insertMCQAforCandidate(jd_objective_questions)
+                        # if jd_subjective_question_prompt:
+                        #     jd_subjective_questions = jd_qna_obj.askGPT(jd_subjective_question_prompt)
+                        #     jd_qna_obj.insertDescriptiveQAforCandidate(jd_subjective_questions)
 
                     except Exception as e:
-                        return jsonify(f"Cannot create Resume/JD questions for {email}", e)
-                    
-                 
+                        return jsonify(f"Cannot create Resume questions for {email}", e)
+                                     
     return redirect("/")
+
+@app.route("/recruitment_journey", methods=['GET','POST'])
+def recruitment_journey():
+    if "user_id" in session:
+        df_data = candidate_qna.find()
+        df_dict = pd.DataFrame(df_data).to_dict(orient='records')
+        # print(df_dict)
+        return render_template("recruitment_journey.html", data=df_dict)
+    else:
+        return redirect("/")
+
+@app.route('/save_journey', methods=['POST'])
+def save_journey():
+    global candidate_qna
+    new_data = request.json
+    data=[]
+    data.append(new_data)
+    print(data)
+    #candidate_qna.insert_one(new_data)
+    candidate_email_id = new_data['email']
+    print(candidate_email_id)
+    candidate_qna.update_one({"email": candidate_email_id},
+                            {"$set": new_data})
+    data.clear()
+    return jsonify({"message": "Data saved successfully"})
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
