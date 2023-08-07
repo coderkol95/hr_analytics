@@ -114,6 +114,26 @@ def available_candidates():
                                     total_pages=total_pages, prev_page=page - 1,next_page=page + 1)
     else:
         return redirect("/")
+    
+@app.route("/show_jd")
+def show_jd():
+    if "user_id" in session:
+        global jd_collection
+        fetched_data=jd_collection.find({},{'_id':0}) 
+        data = pd.DataFrame(fetched_data)
+        # parsed_resumes = pd.read_csv("./parsed_resumes.csv") ## Not a best practice , just an alternative
+        items_per_page = 4 # Number of pages to appear in the first place
+        page = int(request.args.get('page', 1))
+        total_pages = (len(data) + items_per_page - 1) // items_per_page
+        start_idx = (page - 1) * items_per_page
+        end_idx = min(start_idx + items_per_page, len(data))
+        current_page_data = data[start_idx:end_idx].to_dict(orient='records')
+        print(current_page_data)
+        return render_template("show_jd.html", data=current_page_data, current_page=page, 
+                                    total_pages=total_pages, prev_page=page - 1,next_page=page + 1)
+    else:
+        return redirect("/")
+
 
 @app.route("/create_JD", methods=['GET','POST'])
 def create_JD():
@@ -156,8 +176,8 @@ def recommend_candidate():
                 selected_roles = job_roles
             
             # Will work when API key is available
-            best_candidates = score_candidates(job_desc, selected_roles)
-            #best_candidates = pd.DataFrame(data=[['a1','b1','c1','d1','e1','f1','g1','h1'],['a2','b2','c2','d2','e2','f2','g2','h2']], columns=['name','phone','email','job_role','skills','desired_skills','matching_skills','relative_score'])
+            #best_candidates = score_candidates(job_desc, selected_roles)
+            best_candidates = pd.DataFrame(data=[['a1','b1','c1','d1','e1','f1','g1','h1'],['a2','b2','c2','d2','e2','f2','g2','h2']], columns=['name','phone','email','job_role','skills','desired_skills','matching_skills','relative_score'])
 
             return render_template("recommend_candidate.html", job_roles=job_roles, requisition_ids=requisition_ids,
                                    scores=best_candidates.to_dict(orient='records'), flag=True)
