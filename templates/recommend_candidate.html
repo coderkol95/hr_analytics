@@ -53,11 +53,12 @@
     <div class="menu-container">
     <div class="page">
         <div class="container2">
+          <form action="/recommend_candidate" enctype="multipart/form-data" method="post" name="recommend_candidate">
             <div class="field">
                 <div class="centerer">
                     <h2 align="center" style= "color: #520404; font-weight: bold">Candidate Recommendation</h2>
                     <div class="form-group" >
-                      <select class="form-control" size=3 multiple id="optionSelect1" required>
+                      <select class="form-control" size=3 multiple id="optionSelect1" name="optionSelect1" required>
                           <option value="" disabled selected>Job Role</option>
                           {% for value in job_roles %}
                           <option value="{{value}}">{{value}}</option>
@@ -66,7 +67,7 @@
                   </div>
 
                   <div class="form-group" >
-                    <select class="form-control" size=3 multiple id="optionSelect2" required>
+                    <select class="form-control" size=3 multiple id="optionSelect2" name="optionSelect2" required>
                         <option value="" disabled selected>Requisition ID</option>
                         {% for value in requisition_ids %}
                         <option value="{{value}}">{{value}}</option>
@@ -76,20 +77,7 @@
                     <!-- <button class='glowing-btn' onclick="window.location='/'"><span class='glowing-txt'>Homepage</span></button> -->
                 </div>
             </div>      
-            <div class="container3">
-              <!-- <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Requisition ID
-                </button>
-                <div id="myDropdown" class="dropdown-content" aria-labelledby="dropdownMenuButton">
-                  {% for value in job_roles %}
-                  <input type="checkbox" class='glowing-btn' name="selected_values" value=" {{ value }}"><span style="color: rgb(73, 73, 73);">  {{ value }}</span><br>
-                  {% endfor %}
-                </div>
-              </div> 
-            </div>  -->
             <form name="recommend_candidate" class="formclass" enctype="multipart/form-data" action="/recommend_candidate" method="post">
-              
                 <div class="field">
                     <div class="label">
                         <textarea class="pasted_jd" id="job_desc" data-autosize-input='{ "space": 10 }' name="job_desc" onkeyup="adjustTextareaHeight('job_desc')" required></textarea>
@@ -104,7 +92,7 @@
           </div>
 
         {% if flag %}
-        <h2  align="center" style= "color: #520404; font-weight: bold">Recommended Candidates</h2>
+        <h2 style= "color: #520404; font-weight: bold">Recommended Candidates</h2>
         <form class="formclass" action="/shortlist_candidates" method="post" enctype="multipart/form-data">
           <div class="field">  
             <div class="container mt-4">
@@ -172,9 +160,9 @@
                 });
             }
 
-            // Add event listeners to both dropdowns
-            document.getElementById('optionSelect1').addEventListener('change', handleDropdownChange);
-            document.getElementById('optionSelect2').addEventListener('change', handleDropdownChange);
+            // // Add event listeners to both dropdowns
+            // document.getElementById('optionSelect1').addEventListener('change', handleDropdownChange);
+            // document.getElementById('optionSelect2').addEventListener('change', handleDropdownChange);
         </script>
         </div>
       {% else %}
