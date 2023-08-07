@@ -55,9 +55,9 @@
         <div class="container2">
             <div class="field">
                 <div class="centerer">
-                    <h2 align="center"  style= "color: #520404; font-weight: bold">Candidate Recommendation</h2>
+                    <h2 align="center" style= "color: #520404; font-weight: bold">Candidate Recommendation</h2>
                     <div class="form-group" >
-                      <select class="form-control" id="optionSelect1" required>
+                      <select class="form-control" size=3 multiple id="optionSelect1" required>
                           <option value="" disabled selected>Job Role</option>
                           {% for value in job_roles %}
                           <option value="{{value}}">{{value}}</option>
@@ -66,7 +66,7 @@
                   </div>
 
                   <div class="form-group" >
-                    <select class="form-control" id="optionSelect2" required>
+                    <select class="form-control" size=3 multiple id="optionSelect2" required>
                         <option value="" disabled selected>Requisition ID</option>
                         {% for value in requisition_ids %}
                         <option value="{{value}}">{{value}}</option>
@@ -97,7 +97,7 @@
                 </div>
             <div class="field">
               <div class="centerer">
-                <button class='btn mb-2 mb-m-0 btn-round btn-primary btn-block'><span onclick="recommend_candidate.submit()" class='glowing-txt'>Get recommendations</span></button> 
+                <button class='mb-2 btn-round btn-primary'><span onclick="recommend_candidate.submit()">Get recommendations</span></button> 
               </div>
             </div>  
           </form>
@@ -107,7 +107,6 @@
         <h2  align="center" style= "color: #520404; font-weight: bold">Recommended Candidates</h2>
         <form class="formclass" action="/shortlist_candidates" method="post" enctype="multipart/form-data">
           <div class="field">  
-          <div class="menu-container">                
             <div class="container mt-4">
                 <div class="table-container">
                 <table class="table table-bordered">
@@ -142,8 +141,8 @@
               </div>
 
             <div class="field">
-              <div class="btn-shortlist">
-              <input class='btn mb-2 btn-round btn-primary' type="submit" value="Send email for round 1">
+              <div class="centerer">
+              <input class='mb-2 btn-round btn-primary' type="submit" value="Send email for round 1">
               </div>
             </div>
             </form>

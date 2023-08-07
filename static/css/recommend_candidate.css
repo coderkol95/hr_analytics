@@ -48,10 +48,7 @@ gap: 2px;
   }
 
 .field {
-display: flex;
-justify-content: space-between;
-padding: 0.8em 0.4em;
-
+width: 900px;
 }
 
 .centerer{
@@ -192,7 +189,7 @@ textarea {
     border-radius: 8px;
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
     padding: 25px;
-    width: 1000px;
+    width: 950px;
     margin-top: 0px;
   }
   
@@ -267,7 +264,7 @@ textarea {
   
   .pasted_jd{
     height: 400px;
-    width: 900px;
+    width: 850px;
     max-height: 800px;
     padding: 10px;
   }
