@@ -135,7 +135,6 @@ def show_jd():
     else:
         return redirect("/")
 
-
 @app.route("/create_JD", methods=['GET','POST'])
 def create_JD():
 
@@ -171,16 +170,15 @@ def recommend_candidate():
         requisition_ids=pd.DataFrame(fetch)['requisition_id'].to_list()
         if request.method=="POST":
             job_desc = request.form['job_desc']
-            try:
-                selected_roles = request.form.getlist('selected_values')
-            except:
-                selected_roles = job_roles
+            selected_roles = request.form.getlist('optionSelect1')
+            selected_requisition_ids=request.form.getlist('optionSelect2')
+            print(selected_roles, selected_requisition_ids, job_desc)
             
             # Will work when API key is available
             #best_candidates = score_candidates(job_desc, selected_roles)
             best_candidates = pd.DataFrame(data=[['a1','b1','c1','d1','e1','f1','g1','h1'],['a2','b2','c2','d2','e2','f2','g2','h2']], columns=['name','phone','email','job_role','skills','desired_skills','matching_skills','relative_score'])
 
-            return render_template("recommend_candidate.html", job_roles=job_roles, requisition_ids=requisition_ids,
+            return render_template("recommend_candidate.html", job_roles=job_roles, requisition_ids=selected_requisition_ids,
                                    scores=best_candidates.to_dict(orient='records'), flag=True)
     else:
         return redirect("/")
@@ -199,6 +197,7 @@ def parse_resume():
         if request.method=="POST":
             files = request.files.getlist('file')
             req_id = request.form.get('selected_option', None)
+            print(req_id)
             req_ids.append(req_id)
             response_list=[]
             for file in files:
