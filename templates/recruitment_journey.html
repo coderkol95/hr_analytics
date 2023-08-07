@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recruitment Table</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container mt-5">
+    <h2  align="center" style= "color: #520404; font-weight: bold">Recruitment Pipeline</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Job Id</th>
+          <th>Name</th>
+          <th>Email ID</th>
+          <th>Phone Number</th>
+          <th>Status</th>
+          <th>Assessment Score</th>
+          <th>Interview Score</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="table-body">
+        {% for row in data %}
+        <tr>
+          <td contenteditable="false">{{row.req_id}}</td>
+          <td contenteditable="false">{{row.name}}</td>
+          <td contenteditable="false">{{row.email}}</td>
+          <td contenteditable="false">{{row.phone}}</td>
+          <td contenteditable="false">{{row.status}}</td>
+          <td contenteditable="false">{{row.test_score}}</td>
+          <td contenteditable="false">{{row.interview_score}}</td>
+          <td>
+            <button class="btn btn-primary" onclick="editRow(this)">Edit</button>
+            <button class="btn btn-success" onclick="saveRow(this)" style="display: none;">Save</button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <!-- Custom JS -->
+    <script src="static/scripts/recruitment_journey.js"></script>
+</body>
+</html>

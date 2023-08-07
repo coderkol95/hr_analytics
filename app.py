@@ -32,6 +32,7 @@ cursor = conn.cursor()
 ## getting the mongoDB Collection: DataBase Name : Resume , Collection Name : Resume
 collection  = pymongo.MongoClient( os.getenv("MONGO_URI") )['Resume']['Resume']
 jd_collection = pymongo.MongoClient( os.getenv("MONGO_URI") )['Resume']['JD']
+candidate_qna = pymongo.MongoClient(os.getenv("MONGO_URI") )['Resume']['Candidate_QnA']
 
 @app.route("/")
 def home():
@@ -309,6 +310,31 @@ def shortlist_candidates():
                     
                  
     return redirect("/")
+
+@app.route("/recruitment_journey", methods=['GET','POST'])
+def recruitment_journey():
+    if "user_id" in session:
+        df_data = candidate_qna.find()
+        df_dict = pd.DataFrame(df_data).to_dict(orient='records')
+        # print(df_dict)
+        return render_template("recruitment_journey.html", data=df_dict)
+    else:
+        return redirect("/")
+
+@app.route('/save_journey', methods=['POST'])
+def save_journey():
+    global candidate_qna
+    new_data = request.json
+    data=[]
+    data.append(new_data)
+    print(data)
+    #candidate_qna.insert_one(new_data)
+    candidate_email_id = new_data['email']
+    print(candidate_email_id)
+    candidate_qna.update_one({"email": candidate_email_id},
+                            {"$set": new_data})
+    data.clear()
+    return jsonify({"message": "Data saved successfully"})
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
