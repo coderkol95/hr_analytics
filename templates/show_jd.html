@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <link rel="stylesheet" type="text/css" href="static/css/available_candidates.css">
+    <title>JD</title>
+    <link rel="stylesheet" type="text/css" href="static/css/show_jd.css">
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -62,40 +62,21 @@
         </div>
     </div> -->
     <div class="menu-container">
-    <h2 align="center"  style= "color: #520404; font-weight: bold">Available Candidates</h2>
+    <h2 align="center"  style= "color: #520404; font-weight: bold">Job descriptions</h2>
     <div class="container mt-4">
       <div class="table-container">
           <table class="table table-bordered">
               <thead>
                   <tr>
                       <th class="column-divider">Job Id</th>
-                      <th class="column-divider">Name</th>
-                      <th class="column-divider">Phone</th>
-                      <th class="column-divider">Email</th>
-                      <th class="column-divider">Education</th>
-                      <th class="column-divider">Skills</th>
-                      <th class="column-divider">Job Role</th>
-                      <th class="column-divider">Experiences</th>
-                      <th class="column-divider">YOE</th>
-                      <th class="column-divider">Certifications</th>
-                      <!-- <th>Location</th> -->
+                      <th class="column-divider">Job Description</th>
                   </tr>
               </thead>
               <tbody>
                   {% for row in data %}
                   <tr>
                       <td class="column-divider" title="{{ row.name }}">{{ row.requisition_id }}</td>
-                      <td class="column-divider" title="{{ row.name }}">{{ row.name }}</td>
-                      <td class="column-divider" title="{{ row.phone }}">{{ row.phone }}</td>
-                      <td class="column-divider" title="{{ row.email }}">{{ row.email }}</td>
-                      <td class="column-divider" title="{{ row.education }}">{{ row.education }}</td>
-                      <td class="column-divider" title="{{ row.skills }}">{{ row.skills }}</td>
-                      <td class="column-divider" title="{{ row.job_role }}">{{ row.job_role }}</td>
-                      <td class="column-divider" title="{{ row.past_exp }}">{{ row.past_exp }}</td>
-                      <td class="column-divider" title="{{ row.yoe }}">{{ row.yoe }}</td>
-                      <td class="column-divider" title="{{ row.certifications }}">{{ row.certifications }}</td>
-
-                      <!-- <td title="{{ row.Location }}">{{ row.Location }}</td> -->
+                      <td class="column-divider" title="{{ row.name }}">{{ row.job_description }}</td>
                   </tr>
                   {% endfor %}
               </tbody>
@@ -104,15 +85,15 @@
       <div class="pagination mt-4">
           <ul class="pagination justify-content-center">
               <li class="page-item {% if current_page == 1 %}disabled{% endif %}">
-                  <a class="page-link" href="{{ url_for('available_candidates', page=prev_page) }}">Previous</a>
+                  <a class="page-link" href="{{ url_for('show_jd', page=prev_page) }}">Previous</a>
               </li>
               {% for page_num in range(1, total_pages + 1) %}
               <li class="page-item {% if page_num == current_page %}active{% endif %}">
-                  <a class="page-link" href="{{ url_for('available_candidates', page=page_num) }}">{{ page_num }}</a>
+                  <a class="page-link" href="{{ url_for('show_jd', page=page_num) }}">{{ page_num }}</a>
               </li>
               {% endfor %}
               <li class="page-item {% if current_page == total_pages %}disabled{% endif %}">
-                  <a class="page-link" href="{{ url_for('available_candidates', page=next_page) }}">Next</a>
+                  <a class="page-link" href="{{ url_for('show_jd', page=next_page) }}">Next</a>
               </li>
           </ul>
       </div>
@@ -123,7 +104,7 @@
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <!-- <script src="static/scripts/available_candidates.js"></script> -->
+  <script src="static/scripts/show_jd.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </body>
 </html>
