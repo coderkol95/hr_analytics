@@ -29,6 +29,7 @@ Points of Improvements :
     -  When clicked on the Create JD button , it creates the JD but it also resets the input fields. Because of this we are not able to push the requision id in the backend and it returns "": DONE 
     -  When clicked on the save job description button , it shall return the requisition id and the job description both in the flask backend. Then we can store them in mongoDB. We would have to reference the requisition ID later for candidate recommendation and available candidates : DONE 
 
+
 2. Parse Resume(Must Do):
     - Create a dropdown list of all the requisition ids available and parse the resume of the candidate based on that requisition ID only so that we can get the idea of which candidate applied for which requisition id - DONE
     - Show candidate's resume details on white BG.
@@ -43,7 +44,5 @@ Points of Improvements :
     - Remove pinecone and use any inhouse DB
 5. General:
     - After every save , there should be one pop up indicating that save to the user.
-
-
     
     
