@@ -1,182 +1,144 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="static/css/recommend_candidate.css">
+{% extends "navigation.html" %}
+{% block head_content %}
+{{ super() }}
     <title>Candidate recommendation</title>
+    <link rel="stylesheet" type="text/css" href="static/css/recommend_candidate.css">
     <style>
-         body {
-        background-image: url('./static/BG_Image_2.png');
-        background-repeat: no-repeat;
-        background-size: cover;
-        }
+    body {
+    background-image: url('./static/BG_Image_2.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    }
     </style>
-</head>
-<body>
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-        <div class="container">
-          <a class="navbar-brand" href="/home">HR Analytics</a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-              <li class="nav-item active">
-                <a class="nav-link" href="/create_JD">Create JD</a>
-              </li>
-              <li class="nav-item active">
-                <a class="nav-link" href="/show_jd">Show JD</a>
-              </li>
-              <li class="nav-item active">
-                <a class="nav-link" href="/parse_resume">Parse Resume</a>
-              </li>
-              <li class="nav-item active">
-                <a class="nav-link" href="/available_candidates">Candidate DB</a>
-              </li>
-              <li class="nav-item active">
-                <a class="nav-link" href="/recommend_candidate">Recommendation</a>
-              </li>
-              <li class="nav-item active">
-                <a class="nav-link" style="color: #e2e59f;" href="/logout">Logout</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-    
-    <div class="menu-container">
-    <div class="page">
-        <div class="container2">
-          <form action="/recommend_candidate" enctype="multipart/form-data" method="post" name="recommend_candidate">
-            <div class="field">
-                <div class="centerer">
-                    <h2 align="center" style= "color: #520404; font-weight: bold">Candidate Recommendation</h2>
-                    <div class="form-group" >
-                      <select class="form-control" size=3 multiple id="optionSelect1" name="optionSelect1" required>
-                          <option value="" disabled selected>Job Role</option>
-                          {% for value in job_roles %}
-                          <option value="{{value}}">{{value}}</option>
-                          {% endfor %}
-                      </select>
-                  </div>
-
+{% endblock %}
+{% block content %}
+  
+  <div class="menu-container">
+  <div class="page">
+      <div class="container2">
+        <form action="/recommend_candidate" enctype="multipart/form-data" method="post" name="recommend_candidate">
+          <div class="field">
+              <div class="centerer">
+                  <h2 align="center" style= "color: #520404; font-weight: bold">Candidate Recommendation</h2>
                   <div class="form-group" >
-                    <select class="form-control" size=3 multiple id="optionSelect2" name="optionSelect2" required>
-                        <option value="" disabled selected>Requisition ID</option>
-                        {% for value in requisition_ids %}
+                    <select class="form-control" size=3 multiple id="optionSelect1" name="optionSelect1" required>
+                        <option value="" disabled selected>Job Role</option>
+                        {% for value in job_roles %}
                         <option value="{{value}}">{{value}}</option>
                         {% endfor %}
                     </select>
                 </div>
-                    <!-- <button class='glowing-btn' onclick="window.location='/'"><span class='glowing-txt'>Homepage</span></button> -->
-                </div>
-            </div>      
-            <form name="recommend_candidate" class="formclass" enctype="multipart/form-data" action="/recommend_candidate" method="post">
-                <div class="field">
-                    <div class="label">
-                        <textarea class="pasted_jd" id="job_desc" data-autosize-input='{ "space": 10 }' name="job_desc" onkeyup="adjustTextareaHeight('job_desc')" required></textarea>
-                    </div>
-                </div>
-            <div class="field">
-              <div class="centerer">
-                <button class='mb-2 btn-round btn-primary'><span onclick="recommend_candidate.submit()">Get recommendations</span></button> 
-              </div>
-            </div>  
-          </form>
-          </div>
 
-        {% if flag %}
-        <h2 align="center" style="color: #520404; font-weight: bold">Recommended Candidates</h2>
-        <form class="formclass" action="/shortlist_candidates" method="post" enctype="multipart/form-data">
-          <div class="field">  
-            <div class="container mt-4">
-                <div class="table-container">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th class="column-divider">Name</th>
-                            <th class="column-divider">Email</th>
-                            <th class="column-divider">Phone</th>
-                            <th class="column-divider">Job role</th>
-                            <th class="column-divider">Skills</th>
-                            <th class="column-divider">Desired skills</th>
-                            <th class="column-divider">Matching skills</th>
-                            <th class="column-divider">Score</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for row in scores %}
-                        <tr>
-                            <td class="column-divider" title="{{ row.name }}">{{ row.name }}</td>                  
-                            <td class="column-divider" title="{{ row.email }}"><input type="checkbox" name="email_checkbox" value="{{ row.email }}">   {{ row.email }}</td>
-                            <td class="column-divider" title="{{ row.phone }}">{{ row.phone }}</td>                  
-                            <td class="column-divider" title="{{ row.job_role }}">{{ row.job_role }}</td>                  
-                            <td class="column-divider" title="{{ row.skills }}">{{ row.skills }}</td>                  
-                            <td class="column-divider" title="{{ row.desired_skills }}">{{ row.desired_skills }}</td>                  
-                            <td class="column-divider" title="{{ row.matching_skills }}">{{ row.matching_skills }}</td>                  
-                            <td class="column-divider" title="{{ row.relative_score }}">{{ row.relative_score }}</td>                  
-                          </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                <div class="form-group" >
+                  <select class="form-control" size=3 multiple id="optionSelect2" name="optionSelect2" required>
+                      <option value="" disabled selected>Requisition ID</option>
+                      {% for value in requisition_ids %}
+                      <option value="{{value}}">{{value}}</option>
+                      {% endfor %}
+                  </select>
               </div>
+                  <!-- <button class='glowing-btn' onclick="window.location='/'"><span class='glowing-txt'>Homepage</span></button> -->
               </div>
-
-            <div class="field">
-              <div class="centerer">
-              <input class='mb-2 btn-round btn-primary' type="submit" value="Send email for round 1">
+          </div>      
+          <form name="recommend_candidate" class="formclass" enctype="multipart/form-data" action="/recommend_candidate" method="post">
+              <div class="field">
+                  <div class="label">
+                      <textarea class="pasted_jd" id="job_desc" data-autosize-input='{ "space": 10 }' name="job_desc" onkeyup="adjustTextareaHeight('job_desc')" required></textarea>
+                  </div>
               </div>
+          <div class="field">
+            <div class="centerer">
+              <button class='mb-2 btn-round btn-primary'><span onclick="recommend_candidate.submit()">Get recommendations</span></button> 
             </div>
-            </form>
-          </div>
-          <script>
-            // JavaScript to handle the dropdown selection and send the data to the backend
-            function handleDropdownChange(event) {
-                event.preventDefault();
-                const selectedOption = this.value;
-                fetch('/recommend_candidate', {
-                    method: 'POST',
-                    body: new URLSearchParams({
-                        'selected_option': selectedOption
-                    }),
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    }
-                }).then(response => {
-                    if (response.ok) {
-                        return response.text();
-                    }
-                    throw new Error('Network response was not ok.');
-                }).then(responseText => {
-                    console.log(responseText);
-                }).catch(error => {
-                    console.error('Error:', error);
-                });
-            }
-
-            // // Add event listeners to both dropdowns
-            // document.getElementById('optionSelect1').addEventListener('change', handleDropdownChange);
-            // document.getElementById('optionSelect2').addEventListener('change', handleDropdownChange);
-        </script>
+          </div>  
+        </form>
         </div>
-      {% else %}
-        <br>
-        {% endif %}   
 
-    </body>
-    <script>
-      function toggleDropdown() {
-        var dropdownContent = document.getElementById("myDropdown");
-        dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
-      }
-    </script>
-    <script src="static/scripts/recommend_candidate.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-</body>
+      {% if flag %}
+      <h2 align="center" style="color: #520404; font-weight: bold">Recommended Candidates</h2>
+      <form class="formclass" action="/shortlist_candidates" method="post" enctype="multipart/form-data">
+        <div class="field">  
+          <div class="container mt-4">
+              <div class="table-container">
+              <table class="table table-bordered">
+                  <thead>
+                      <tr>
+                          <th class="column-divider">Name</th>
+                          <th class="column-divider">Email</th>
+                          <th class="column-divider">Phone</th>
+                          <th class="column-divider">Job role</th>
+                          <th class="column-divider">Skills</th>
+                          <th class="column-divider">Desired skills</th>
+                          <th class="column-divider">Matching skills</th>
+                          <th class="column-divider">Score</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {% for row in scores %}
+                      <tr>
+                          <td class="column-divider" title="{{ row.name }}">{{ row.name }}</td>                  
+                          <td class="column-divider" title="{{ row.email }}"><input type="checkbox" name="email_checkbox" value="{{ row.email }}">   {{ row.email }}</td>
+                          <td class="column-divider" title="{{ row.phone }}">{{ row.phone }}</td>                  
+                          <td class="column-divider" title="{{ row.job_role }}">{{ row.job_role }}</td>                  
+                          <td class="column-divider" title="{{ row.skills }}">{{ row.skills }}</td>                  
+                          <td class="column-divider" title="{{ row.desired_skills }}">{{ row.desired_skills }}</td>                  
+                          <td class="column-divider" title="{{ row.matching_skills }}">{{ row.matching_skills }}</td>                  
+                          <td class="column-divider" title="{{ row.relative_score }}">{{ row.relative_score }}</td>                  
+                        </tr>
+                      {% endfor %}
+                  </tbody>
+              </table>
+            </div>
+            </div>
+
+          <div class="field">
+            <div class="centerer">
+            <input class='mb-2 btn-round btn-primary' type="submit" value="Send email for round 1">
+            </div>
+          </div>
+          </form>
+        </div>
+        <script>
+          // JavaScript to handle the dropdown selection and send the data to the backend
+          function handleDropdownChange(event) {
+              event.preventDefault();
+              const selectedOption = this.value;
+              fetch('/recommend_candidate', {
+                  method: 'POST',
+                  body: new URLSearchParams({
+                      'selected_option': selectedOption
+                  }),
+                  headers: {
+                      'Content-Type': 'application/x-www-form-urlencoded'
+                  }
+              }).then(response => {
+                  if (response.ok) {
+                      return response.text();
+                  }
+                  throw new Error('Network response was not ok.');
+              }).then(responseText => {
+                  console.log(responseText);
+              }).catch(error => {
+                  console.error('Error:', error);
+              });
+          }
+
+          // // Add event listeners to both dropdowns
+          // document.getElementById('optionSelect1').addEventListener('change', handleDropdownChange);
+          // document.getElementById('optionSelect2').addEventListener('change', handleDropdownChange);
+      </script>
+      </div>
+    {% else %}
+      <br>
+      {% endif %}   
+
+  </body>
+  <script>
+    function toggleDropdown() {
+      var dropdownContent = document.getElementById("myDropdown");
+      dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
+    }
+  </script>
+  <script src="static/scripts/recommend_candidate.js"></script>
+{% endblock %}
 </html>

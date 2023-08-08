@@ -18,6 +18,7 @@ h2 {
   color: #470404; 
   font-weight: bold; 
   font-family: 'Calibri', sans-serif;
+  padding: 20px;
   /* font-family: 'Courier New', monospace; */
 }
 
@@ -143,12 +144,22 @@ body {
   font-size: 18px;
 }
 
-.menu-container {
+/* .menu-container {
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
   padding: 25px;
   width: 450px;
+  margin-top: 0px;
+} */
+
+.menu-container {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  width: 1000;
+  height: 700px;
   margin-top: 0px;
 }
 

@@ -28,21 +28,43 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
-              <li class="nav-item active">
-                <a class="nav-link" href="/create_JD">Create JD</a>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Job Description
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="/create_JD">Create JD</a>
+                  <a class="dropdown-item" href="/show_jd">Show JD</a>
+                </div>
               </li>
-              <li class="nav-item active">
-                <a class="nav-link" href="/show_jd">Show JD</a>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Resume
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="/parse_resume">Parse Resume</a>
+                </div>
               </li>
-              <li class="nav-item active">
-                <a class="nav-link" href="/parse_resume">Parse Resume</a>
+    
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Applicants
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="/available_candidates">Available Candidates</a>
+                  <a class="dropdown-item" href="/recommend_candidate">Recommend Candidates</a>
+                </div>
               </li>
-              <li class="nav-item active">
-                <a class="nav-link" href="/available_candidates">Candidate DB</a>
+    
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Dashboard
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="/recruitment_journey">Recruitment Stages</a>
+                </div>
               </li>
-              <li class="nav-item active">
-                <a class="nav-link" href="/recommend_candidate">Recommendation</a>
-              </li>
+    
               <li class="nav-item active">
                 <a class="nav-link" style="color: #e2e59f;" href="/logout">Logout</a>
               </li>
@@ -222,5 +244,8 @@
     </script>
     <script src="static/scripts/parse_resume.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

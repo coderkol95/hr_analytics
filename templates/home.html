@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 <head>
   <link rel="stylesheet" type="text/css" href="static/css/home.css">
@@ -50,5 +50,128 @@
   </div>
   </div>
   <script src="static/scripts/home.js"></script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="static/css/home.css">
+  <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+    background-image: url('./static/BG_Image_2.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    }
+  </style>
+  <style>
+    /* Adjust card styles as needed */
+    .card {
+      margin: 10px;
+      width: 250px;
+    }
+    .row {
+      justify-content: center; /* Center the cards horizontally */
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="/home">HR Analytics</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" style="color: #e2e59f;" href="/logout">Logout</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="menu-container">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3">
+        <!-- Card 1 -->
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Create Job Description</h5>
+            <p class="card-text">Create specific job description with the information provided</p>
+            <a href="{{url_for('create_JD')}}" class="btn btn-primary"  style="background-color: #e78cb1;" >Create JD</a>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Show Job Description</h5>
+            <p class="card-text">Show job descriptions against each requisition id</p>
+            <a href="{{url_for('show_jd')}}" class="btn btn-primary" style="background-color: #e78cb1;">Show JD</a>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Parse Resume</h5>
+            <p class="card-text">Extract the significant information out of resume.</p>
+            <a href="{{url_for('parse_resume')}}" class="btn btn-primary" style="background-color: #e78cb1;">Parse Resume</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Image (You can replace 'image.jpg' with your image URL) -->
+      <div class="col-md-6">
+        <img src="./static/BG_Image_1.png" alt="Image" class="img-fluid">
+        <h2 align="center" style= "color: #520404; font-weight: bold; font-size: 40px;">HR Analytics Portal</h2>
+        <p style="opacity: 0.5;">The HR Analytics portal is developed to help recruiters streamline the hiring process with the help of automation 
+          powered by Generative AI. The power of LLMs are harnessed in job description creation, 
+          resume parsing, candidate recommendation, preparing test questions and evaluation of
+          candidates.
+        </p>
+      </div>
+
+      <div class="col-md-3">
+        <!-- Card 4 -->
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Candidate Database</h5>
+            <p class="card-text">Display resume information against each candidate in tabular form.</p>
+            <a href="{{url_for('available_candidates')}}" class="btn btn-primary" style="background-color: #e78cb1;">Candidate Database</a>
+          </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Recommendation</h5>
+            <p class="card-text">Recomments best candidates against each job id or job role</p>
+            <a href="{{url_for('recommend_candidate')}}" class="btn btn-primary" style="background-color: #e78cb1;">Recommendations</a>
+          </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Track Applicants</h5>
+            <p class="card-text">Display applicant's status at different recruitment stages.</p>
+            <a href="{{url_for('recruitment_journey')}}" class="btn btn-primary" style="background-color: #e78cb1;">Track Applicants</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
