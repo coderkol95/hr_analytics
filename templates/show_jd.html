@@ -27,7 +27,7 @@
                 {% for row in data %}
                 <tr>
                     <td class="column-divider" title="{{ row.name }}">{{ row.requisition_id }}</td>
-                    <td class="column-divider" title="{{ row.name }}">{{ row.job_description }}</td>
+                    <td class="column-divider" style="height: 60px; white-space: normal" title="{{ row.name }}">{{ row.job_description }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -50,5 +50,6 @@
     </div>
 </div>
 </div>
+<script src="static/scripts/show_jd.js"></script>  
 {% endblock %}
 </html>

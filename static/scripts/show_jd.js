@@ -31,4 +31,20 @@ document.addEventListener("DOMContentLoaded", () => {
     // Initial data load
     loadData(currentPage);
   });
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const cells = document.querySelectorAll('td');
+
+    cells.forEach(function (cell) {
+      const originalContent = cell.innerHTML;
+      const truncatedContent = originalContent.split(' ').slice(0, 80).join(' '); // Show only the first 200 words
+
+      if (originalContent !== truncatedContent) {
+        cell.innerHTML = truncatedContent + '...'; // Add ellipsis if the text is truncated
+        cell.setAttribute('title', originalContent); // Set the full text as a tooltip
+      } else {
+        cell.removeAttribute('title'); // Remove the tooltip attribute if the text is not truncated
+      }
+    });
+  });
   

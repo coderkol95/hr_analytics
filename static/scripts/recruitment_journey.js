@@ -31,14 +31,6 @@ function editRow(button) {
     // Toggle buttons display
     button.style.display = "none";
     row.querySelector("button.btn-primary").style.display = "block";
-  
-    // Here, you can implement the code to save the data to your MongoDB database using AJAX or fetch API.
-    // Since we cannot connect to a real database in this example, we will just display the data in the console.
-  
-    console.log("Saving data:");
-    console.log("Name:", name);
-    console.log("Email ID:", email);
-    console.log("Phone Number:", phoneNumber);
     // Create an object with the data to be sent to the backend
     const data = {
       req_id:req_id,

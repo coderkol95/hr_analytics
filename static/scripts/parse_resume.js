@@ -26,3 +26,27 @@ $.ajax({
     dataType: 'json'
 });
   }
+
+ // JavaScript to handle the dropdown selection and send the data to the backend
+ document.getElementById('optionSelect').addEventListener('change', function(event) {
+  event.preventDefault();
+  const selectedOption = this.value;
+  fetch('/parse_resume', {
+      method: 'POST',
+      body: new URLSearchParams({
+          'selected_option': selectedOption
+      }),
+      headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+      }
+  }).then(response => {
+      if (response.ok) {
+          return response.text();
+      }
+      throw new Error('Network response was not ok.');
+  }).then(responseText => {
+      console.log(responseText);
+  }).catch(error => {
+      console.error('Error:', error);
+  });
+});

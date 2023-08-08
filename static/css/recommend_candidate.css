@@ -327,3 +327,15 @@ textarea {
   max-width: 600px; 
   width: 100px;
 }
+
+.btn{
+  text-align: center;
+  vertical-align: middle;
+  user-select: none;
+  border: 1px solid transparent;
+  line-height: 1.5;
+}
+
+.btn.btn-primary:hover{
+  background-color: #124f78;
+}

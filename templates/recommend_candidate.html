@@ -43,12 +43,12 @@
           <form name="recommend_candidate" class="formclass" enctype="multipart/form-data" action="/recommend_candidate" method="post">
               <div class="field">
                   <div class="label">
-                      <textarea class="pasted_jd" id="job_desc" data-autosize-input='{ "space": 10 }' name="job_desc" onkeyup="adjustTextareaHeight('job_desc')" required></textarea>
+                      <textarea class="pasted_jd" id="job_desc" style="overflow-y: scroll;" data-autosize-input='{ "space": 10 }' name="job_desc" onkeyup="adjustTextareaHeight('job_desc')" required></textarea>
                   </div>
               </div>
           <div class="field">
             <div class="centerer">
-              <button class='mb-2 btn-round btn-primary'><span onclick="recommend_candidate.submit()">Get recommendations</span></button> 
+              <button class='mb-2 btn-round btn-primary btn-lg' style="background: #4f81c7; font-weight: 400; border: white;"><span onclick="recommend_candidate.submit()">Get recommendations</span></button> 
             </div>
           </div>  
         </form>
@@ -93,52 +93,16 @@
 
           <div class="field">
             <div class="centerer">
-            <input class='mb-2 btn-round btn-primary' type="submit" value="Send email for round 1">
+            <input class='mb-2 btn-round btn-primary btn-lg' type="submit" style="background: #4f81c7; font-weight: 400; border: white;" value="Send Test Link">
             </div>
           </div>
           </form>
         </div>
-        <script>
-          // JavaScript to handle the dropdown selection and send the data to the backend
-          function handleDropdownChange(event) {
-              event.preventDefault();
-              const selectedOption = this.value;
-              fetch('/recommend_candidate', {
-                  method: 'POST',
-                  body: new URLSearchParams({
-                      'selected_option': selectedOption
-                  }),
-                  headers: {
-                      'Content-Type': 'application/x-www-form-urlencoded'
-                  }
-              }).then(response => {
-                  if (response.ok) {
-                      return response.text();
-                  }
-                  throw new Error('Network response was not ok.');
-              }).then(responseText => {
-                  console.log(responseText);
-              }).catch(error => {
-                  console.error('Error:', error);
-              });
-          }
-
-          // // Add event listeners to both dropdowns
-          // document.getElementById('optionSelect1').addEventListener('change', handleDropdownChange);
-          // document.getElementById('optionSelect2').addEventListener('change', handleDropdownChange);
-      </script>
       </div>
     {% else %}
-      <br>
+      <br> 
       {% endif %}   
-
   </body>
-  <script>
-    function toggleDropdown() {
-      var dropdownContent = document.getElementById("myDropdown");
-      dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
-    }
-  </script>
   <script src="static/scripts/recommend_candidate.js"></script>
 {% endblock %}
 </html>

@@ -90,13 +90,16 @@ table {
   width: 100%;
   border-collapse: collapse;
 }
+
 th, td {
   text-align: center;
+  border: 1px solid #ccc;
   padding: 10px;
-  white-space: nowrap; /* Prevent text from wrapping within cells */
-  max-width: 200px; /* Set a maximum width for the cells */
-  overflow: hidden;
-  text-overflow: ellipsis;
+  word-wrap: break-word; /* Ensure long words are wrapped */
+  max-width: 300px; /* Set a maximum width for each cell to control the wrapping */
+  overflow: hidden; /* Hide any overflowing content */
+  white-space: nowrap; /* Prevent text from breaking into multiple lines */
+  text-overflow: ellipsis; /* Add ellipsis (...) when text overflows */
 }
 .column-divider {
   border-right: 1px solid #dee2e6;

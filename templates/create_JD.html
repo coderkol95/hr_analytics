@@ -121,24 +121,22 @@
     </div>
 </div>
     <br>
+    {% if generated_jd and requisition_id %}
     <div class="container">
         <div class="menu-container">
-        <h2 align="center">job Description</h2>
         <div class="field">
             <div class="label">
-                {% if generated_jd and requisition_id %}
+                <h2 align="center">job Description</h2>
                 <textarea class="jdarea" id="generated_job_desc" data-autosize-input='{ "space": 40 }' name="generated_job_desc" onmouseover="adjustTextareaHeight('generated_job_desc')">{{generated_jd}}</textarea>              
                 
                 <div class="centerer2">
                     <button class='btn mb-2 mb-m-0 btn-round btn-primary btn-block' onclick="save_job_desc('{{requisition_id}}')"><span class='muted-txt'>Save job description</span></button>
                 </div>
-
-                {% else %}
-                    Waiting for your input ...
-                {% endif %}    
+               
             </div>
         </div>
     </div>
+    {% endif %}    
 </div>
 <script src="static/scripts/create_JD.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
