@@ -1,98 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JD</title>
+{% extends "navigation.html" %}
+{% block head_content %}
+{{ super() }}
+    <title>Show JD</title>
     <link rel="stylesheet" type="text/css" href="static/css/show_jd.css">
-    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        body {
-        background-image: url('./static/BG_Image_2.png');
-        background-repeat: no-repeat;
-        background-size: cover;
-        }
-      </style>
-</head>
-<body>
-  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-    <div class="container">
-      <a class="navbar-brand" href="/home">HR Analytics</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="/create_JD">Create JD</a>
-          </li>
-          <li class="nav-item active">
-            <a class="nav-link" href="/show_jd">Show JD</a>
-          </li>
-          <li class="nav-item active">
-            <a class="nav-link" href="/parse_resume">Parse Resume</a>
-          </li>
-          <li class="nav-item active">
-            <a class="nav-link" href="/available_candidates">Candidate DB</a>
-          </li>
-          <li class="nav-item active">
-            <a class="nav-link" href="/recommend_candidate">Recommendation</a>
-          </li>
-          <li class="nav-item active">
-            <a class="nav-link" style="color: #e2e59f;" href="/logout">Logout</a>
-          </li>
-        </ul>
-      </div>
+    body {
+    background-image: url('./static/BG_Image_2.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    }
+    </style>
+{% endblock %}
+{% block content %}
+  <div class="menu-container">
+  <h2 align="center" style= "color: #520404; font-weight: bold">Job descriptions</h2>
+  <div class="container mt-4">
+    <div class="table-container">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th class="column-divider">Job Id</th>
+                    <th class="column-divider">Job Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data %}
+                <tr>
+                    <td class="column-divider" title="{{ row.name }}">{{ row.requisition_id }}</td>
+                    <td class="column-divider" title="{{ row.name }}">{{ row.job_description }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-  </nav>
-    <div class="menu-container">
-    <h2 align="center" style= "color: #520404; font-weight: bold">Job descriptions</h2>
-    <div class="container mt-4">
-      <div class="table-container">
-          <table class="table table-bordered">
-              <thead>
-                  <tr>
-                      <th class="column-divider">Job Id</th>
-                      <th class="column-divider">Job Description</th>
-                  </tr>
-              </thead>
-              <tbody>
-                  {% for row in data %}
-                  <tr>
-                      <td class="column-divider" title="{{ row.name }}">{{ row.requisition_id }}</td>
-                      <td class="column-divider" title="{{ row.name }}">{{ row.job_description }}</td>
-                  </tr>
-                  {% endfor %}
-              </tbody>
-          </table>
-      </div>
-      <div class="pagination mt-4">
-          <ul class="pagination justify-content-center">
-              <li class="page-item {% if current_page == 1 %}disabled{% endif %}">
-                  <a class="page-link" href="{{ url_for('show_jd', page=prev_page) }}">Previous</a>
-              </li>
-              {% for page_num in range(1, total_pages + 1) %}
-              <li class="page-item {% if page_num == current_page %}active{% endif %}">
-                  <a class="page-link" href="{{ url_for('show_jd', page=page_num) }}">{{ page_num }}</a>
-              </li>
-              {% endfor %}
-              <li class="page-item {% if current_page == total_pages %}disabled{% endif %}">
-                  <a class="page-link" href="{{ url_for('show_jd', page=next_page) }}">Next</a>
-              </li>
-          </ul>
-      </div>
-  </div>
+    <div class="pagination mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item {% if current_page == 1 %}disabled{% endif %}">
+                <a class="page-link" href="{{ url_for('show_jd', page=prev_page) }}">Previous</a>
+            </li>
+            {% for page_num in range(1, total_pages + 1) %}
+            <li class="page-item {% if page_num == current_page %}active{% endif %}">
+                <a class="page-link" href="{{ url_for('show_jd', page=page_num) }}">{{ page_num }}</a>
+            </li>
+            {% endfor %}
+            <li class="page-item {% if current_page == total_pages %}disabled{% endif %}">
+                <a class="page-link" href="{{ url_for('show_jd', page=next_page) }}">Next</a>
+            </li>
+        </ul>
+    </div>
 </div>
-
-  <!-- Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <script src="static/scripts/show_jd.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-</body>
+</div>
+{% endblock %}
 </html>
