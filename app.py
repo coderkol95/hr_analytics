@@ -11,8 +11,8 @@ warnings.filterwarnings('ignore')
 from werkzeug.utils import secure_filename
 from email_candidate import EmailCandidate
 from llm import generate_jd, parseResume, score_candidates
-from flask import Flask, render_template, request, url_for, redirect, session, jsonify
 from shortlist_candidate import CandidateCredentials , ResumeQnAGenerator ,JDQnAGenerator
+from flask import Flask, render_template, request, url_for, redirect, session, jsonify, url_for
 
 load_dotenv()
 app = Flask(__name__)
@@ -130,7 +130,6 @@ def show_jd():
         start_idx = (page - 1) * items_per_page
         end_idx = min(start_idx + items_per_page, len(data))
         current_page_data = data[start_idx:end_idx].to_dict(orient='records')
-        print(current_page_data)
         return render_template("show_jd.html", data=current_page_data, current_page=page, 
                                     total_pages=total_pages, prev_page=page - 1,next_page=page + 1)
     else:
@@ -224,19 +223,18 @@ def parse_resume():
         return redirect("/")
 
 
-@app.route("/save_parsed_resume", methods=["POST"])
+@app.route("/save_parsed_resume", methods=["GET","POST"])
 def save_parsed_resume():
     if "user_id" in session:
-        if request.method=="POST":
-            # Currently just adding a new row every time a resume is parsed
-            global collection
-            response = request.get_json()
-            collection.insert_one(response)
-            # data=collection.find()   ## will fetch all the parsed resume data
-            # df = pd.DataFrame(data)
-            ### Optional Step: Not recommended for building a scalable solution
-            ## df.to_csv('parsed_resumes.csv')  
-            return 'OK', 200
+        # Currently just adding a new row every time a resume is parsed
+        global collection
+        response = request.get_json()
+        collection.insert_one(response)
+        # data=collection.find()   ## will fetch all the parsed resume data
+        # df = pd.DataFrame(data)
+        ### Optional Step: Not recommended for building a scalable solution
+        ## df.to_csv('parsed_resumes.csv')  
+        return redirect(url_for('available_candidates'))
     else:
         return redirect("/")
 
@@ -349,6 +347,17 @@ def save_journey():
                             {"$set": new_data})
     data.clear()
     return jsonify({"message": "Data saved successfully"})
+
+@app.route('/get_dropdown_result', methods=['POST'])
+def get_response():
+    selected_req_id = request.json.get('selected_option')
+    print(selected_req_id)
+    jd_collection = pymongo.MongoClient( os.getenv("MONGO_URI") )['Resume']['JD']
+    filter_={"requisition_id":selected_req_id}
+    query_result_iterator = jd_collection.find(filter_,{'job_description'}) 
+    for query_result in query_result_iterator:
+        job_description = query_result['job_description']
+    return jsonify(response = job_description)
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
