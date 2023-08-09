@@ -19,9 +19,9 @@ class EmailCandidate:
         self.sender_email = os.getenv('sender_email_id')
         self.sender_password = os.getenv('sender_password')
 
-    def inviteCandidateforAssessment(self,candidate_email_id='krishnendudey21@gmail.com'):
+    def inviteCandidateforAssessment(self,candidate_email_id):
         conn = mysql.connector.connect(**self.db_config)
-        cursor = conn.cursor()
+        cursor = conn.cursor(buffered=True)
         recipient_email = candidate_email_id
         # cursor.execute(f"SELECT name FROM candidates WHERE email = '{candidate_email_id}' limit 1;")
         cursor.execute(f'SELECT password FROM candidates WHERE email = "{candidate_email_id}" limit 1;')

@@ -20,7 +20,7 @@ class CandidateCredentials:
     def create_candidate_credentials(self,candidate_email_id:str):
         try:
             conn = mysql.connector.connect(**self.db_config)
-            cursor = conn.cursor()
+            cursor = conn.cursor(buffered=True)
             id = uuid.uuid4().hex[:16]
             email = candidate_email_id
             password = uuid.uuid4().hex[:16]
