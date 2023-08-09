@@ -100,7 +100,10 @@ th, td {
   overflow: hidden; /* Hide any overflowing content */
   white-space: nowrap; /* Prevent text from breaking into multiple lines */
   text-overflow: ellipsis; /* Add ellipsis (...) when text overflows */
+  overflow: hidden; /* Hide overflow content */
+  text-overflow: ellipsis; /
 }
+
 .column-divider {
   border-right: 1px solid #dee2e6;
 }

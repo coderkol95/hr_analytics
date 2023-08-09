@@ -21,13 +21,23 @@
                 <tr>
                     <th class="column-divider">Job Id</th>
                     <th class="column-divider">Job Description</th>
+                    <th class="column-divider">Improvements</th>
+                    <th class="column-divider">Score(%)</th>
                 </tr>
             </thead>
             <tbody>
                 {% for row in data %}
                 <tr>
-                    <td class="column-divider" title="{{ row.name }}">{{ row.requisition_id }}</td>
-                    <td class="column-divider" style="height: 60px; white-space: normal" title="{{ row.name }}">{{ row.job_description }}</td>
+                    <td contenteditable="false" class="column-divider" title="{{ row.requisition_id }}" id="requisition_id">{{row.requisition_id}}</td>
+                    <td contenteditable="false" class="column-divider" id="jd"
+                                        style="height: 40px; white-space: normal" title="{{ row.job_description }}"><textarea name="jd_text_area" id="jd" cols="30" rows="8" style="border: rgb(133, 131, 131);">{{ row.job_description }}</textarea></td>
+                    <td contenteditable="false" class="column-divider" id="jd_improvement"
+                                        style="height: 40px; white-space: normal" title="{{ row.jd_improvement }}"><textarea name="jd_improvement_text_area" id="jd_improvement" cols="30" rows="8" style="border: rgb(133, 131, 131);">{{ row.jd_improvement }}</textarea></td>
+                    <td contenteditable="false" class="column-divider" title="{{ row.jd_score }}">{{ row.jd_score }}</td>
+                    <td>
+                        <button class="btn btn-primary" style="background-color: #e78cb1;" onclick="editRow(this)">Edit</button>
+                        <button class="btn btn-success" onclick="saveRow(this)" style="display: none;">Save</button>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
