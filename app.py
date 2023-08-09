@@ -1,6 +1,7 @@
 import os
 import re
 import uuid
+import math
 import bcrypt
 import pymongo
 import warnings
@@ -10,7 +11,9 @@ from dotenv import load_dotenv
 warnings.filterwarnings('ignore')
 from werkzeug.utils import secure_filename
 from email_candidate import EmailCandidate
+from improve_jd import JDImprovements
 from llm import generate_jd, parseResume, score_candidates
+from sentence_transformers import SentenceTransformer, util
 from shortlist_candidate import CandidateCredentials , ResumeQnAGenerator ,JDQnAGenerator
 from flask import Flask, render_template, request, url_for, redirect, session, jsonify, url_for
 
@@ -28,7 +31,7 @@ db_config = {
 
 ## Connecting to the mysql database to store user 
 conn = mysql.connector.connect(**db_config)
-cursor = conn.cursor()
+cursor = conn.cursor(buffered=True)
 
 ## getting the mongoDB Collection: DataBase Name : Resume , Collection Name : Resume
 collection  = pymongo.MongoClient( os.getenv("MONGO_URI") )['Resume']['Resume']
@@ -123,6 +126,21 @@ def show_jd():
         global jd_collection
         fetched_data=jd_collection.find({},{'_id':0}) 
         data = pd.DataFrame(fetched_data)
+        for i in range(data.shape[0]):
+            if type(data.loc[i]['jd_improvement'])==float:
+                current_req_id = data.loc[i].requisition_id
+                current_jd = data.loc[i].job_description
+                jd_improvement_obj = JDImprovements(current_jd)
+                result = jd_improvement_obj.enhance_jd()
+                jd_improvement = result['jd_improvement']
+                if jd_improvement == "No Improvement Required":
+                    jd_score = '100'
+                else:
+                    jd_score = result['jd_score']
+                jd_collection.update_one({"requisition_id": current_req_id},
+                                        {"$set": {"jd_improvement": jd_improvement,"jd_score":jd_score}})
+                fetched_data=jd_collection.find({},{'_id':0}) 
+                data = pd.DataFrame(fetched_data)
         # parsed_resumes = pd.read_csv("./parsed_resumes.csv") ## Not a best practice , just an alternative
         items_per_page = 4 # Number of pages to appear in the first place
         page = int(request.args.get('page', 1))
@@ -206,8 +224,8 @@ def parse_resume():
                 ### pdf_path : KD
                 pdf_path = '.\\uploads\\' + filename   
                 # file.save(pdf_path)
-                response = parseResume(pdf_path)  ## dictionary
-                # It needs to be done so that we may get the mapping of req_id and candidate mail id 
+                # response = parseResume(pdf_path)  ## dictionary
+                response = {'name': 'Praveen Srikaram', 'contact_number': '(+91)7013815534', 'email_id': 'praveensaikrishna7722@gmail.com', 'linkedIn_id': 'www.linkedin.com/in/praveen-srikaram', 'educational_background': 'B. Tech in Mechanical Engineering from SRKR Engineering College with CGPA 8.6 (86%) and Specialization in Math-Physics-Chemistry from Pragati Junior College with overall percentage 98%', 'years_of_experience': '2 years', 'identified_job_role': 'Data Analyst', 'technical_skillsets': 'Python, Requests, Beautiful Soup, NumPy, Pandas, Matplotlib, Seaborne, JSON file handling, modular programming', 'past_job_experience': 'Data Analyst-Systems Engineer at TATA CONSULTANCY SERVICES from Jan 2022 to till date and Assistant Systems Engineer at TATA CONSULTANCY SERVICES from Mar 2021 to Feb 2022', 'certifications': 'Not Mentioned in Resume', 'projects': 'TV-analysis, COVID-19 analysis, Event management app', 'publication': 'Not Mentioned in Resume', 'awards': 'Not Mentioned in Resume'} 
                 response.update({'requisition_id':req_ids[0]})
                 response_list.append(response)    ## 
                 print(response_list)
@@ -305,7 +323,7 @@ def shortlist_candidates():
                         #     jd_qna_obj.insertDescriptiveQAforCandidate(jd_subjective_questions)
 
                         candidate_qna.update_one({"email": email}, 
-                                                 {"$set": {"status": "Assessment Initiated"}})
+                                                 {"$set": {"status": "Round 1 Initiated"}})
                         print("Success !!! Candidate's status is updated")
 
                         mail_obj = EmailCandidate()
@@ -323,6 +341,19 @@ def shortlist_candidates():
                                      
     return redirect("/")
 
+@app.route('/send_round2_email', methods=['POST'])
+def send_email():
+    data = request.get_json()
+    email = data['email']
+    email_= 'kd.datascience@gmail.com'
+    mail_obj = EmailCandidate()
+    mail_obj.inviteCandidateForInterview(email_)
+    print(email)
+    print("Success !!! Candidate's is sent email for Round 2")    
+    candidate_qna.update_one({"email": email}, 
+                                {"$set": {"status": "Round 2 Initiated"}})    
+    return {'message': 'Email sent successfully'}
+
 @app.route("/recruitment_journey", methods=['GET','POST'])
 def recruitment_journey():
     if "user_id" in session:
@@ -332,6 +363,47 @@ def recruitment_journey():
         return render_template("recruitment_journey.html", data=df_dict)
     else:
         return redirect("/")
+
+existing_jd = None
+@app.route('/score_jd', methods=['GET','POST'])
+def score_jd():
+    global existing_jd
+    new_jd_info = request.json
+    req_id = new_jd_info['req_id']
+    new_jd = new_jd_info['jd']
+    filter_ = {'requsition_id':req_id}
+    jd_obj = jd_collection.find(filter_)
+    print(new_jd_info)
+    for jd_dict in jd_obj:
+        existing_jd = jd_dict['job_description']
+    similarity_score = _calculate_semantic_similarity(existing_jd,new_jd)
+    if similarity_score>=0.8:
+        jd_collection.update_one({'requsition_id':req_id},
+                         {"$set": {"job_description": new_jd,"jd_score":jd_score}})
+        return jsonify({"message": "JD saved successfully with no change in score as the change in JD is very minimal"})
+    else:
+        jd_improvement_obj = JDImprovements(new_jd)
+        result = jd_improvement_obj.enhance_jd()
+        jd_improvement = result['jd_improvement']
+
+        if jd_improvement == "No Improvement Required":
+            jd_score = '100'
+        else:
+            jd_score = result['jd_score']
+
+        jd_collection.update_one({'requsition_id':req_id},
+                         {"$set": {"job_description": new_jd,"jd_improvement":jd_improvement,"jd_score":jd_score}})
+        return jsonify({"message": "JD saved successfully with  change in score as the change in JD is very significant"})
+
+
+def _calculate_semantic_similarity(sentence1, sentence2):
+    '''
+        Calculate Similartity score between GPT answer and candidate answer
+    '''
+    model = SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
+    embeddings = model.encode([sentence1, sentence2], convert_to_tensor=True)
+    cosine_sim = util.pytorch_cos_sim(embeddings[0], embeddings[1])
+    return cosine_sim.item()
 
 @app.route('/save_journey', methods=['POST'])
 def save_journey():
