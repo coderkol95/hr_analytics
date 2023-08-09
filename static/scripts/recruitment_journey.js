@@ -58,3 +58,57 @@ function editRow(button) {
       console.error('Error:', error);
     });
   }
+
+
+  function sendEmail(button) {
+    const email = button.getAttribute("data-email");
+    
+    // Send an AJAX request to the Flask backend to handle sending the email
+    fetch('/send_round2_email', {
+      method: 'POST',
+      body: JSON.stringify({ email }), // Sending the email data
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(response => {
+      if (response.ok) {
+        // Email sent successfully
+        console.log('Email sent');
+        alert('Email is sent to the candidate')
+      } else {
+        // Handle error
+        console.error('Error sending email');
+      }
+    }).catch(error => {
+      console.error('Error sending email', error);
+    });
+  }
+  
+  // Update button states based on test scores
+  document.addEventListener("DOMContentLoaded", function() {
+    const rows = document.querySelectorAll("#table-body tr");
+    rows.forEach(row => {
+      const testScore = parseFloat(row.querySelector("td:nth-child(6)").textContent);
+      console.log(testScore)
+      const emailButton = row.querySelector(".send-email");
+      
+      if (Number(testScore) >= 20) {
+        emailButton.removeAttribute("disabled");
+      }
+    });
+  });
+
+
+// const interviewScoreCells = document.querySelectorAll('.interview-score');
+
+// interviewScoreCells.forEach(cell => {
+//   const interviewScore = parseInt(cell.getAttribute('data-score'));
+
+//   if (interviewScore >= 20) {
+//     cell.innerHTML = '<span class="score-pass">Pass</span>';
+//     cell.style.color = 'green';
+//   } else {
+//     cell.innerHTML = '<span class="score-fail">Fail</span>';
+//     cell.style.color = 'red';
+//   }
+// });

@@ -13,7 +13,7 @@
       border-radius: 8px;
       box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
       padding: 25px;
-      width: 1000px;
+      width: 1300px;
       height: 600px;
       margin: 0 auto;
       margin-top: 100px;
@@ -33,9 +33,10 @@
           <th>Name</th>
           <th>Email ID</th>
           <th>Phone Number</th>
-          <th>Status</th>
-          <th>Assessment Score</th>
-          <th>Interview Score</th>
+          <th>Recruitment Status</th>
+          <th>Round 1 Score(%)</th>
+          <th>Round1 Status</th>
+          <th>Round2 Status</th>
           <th></th>
         </tr>
       </thead>
@@ -44,14 +45,24 @@
         <tr>
           <td contenteditable="false">{{row.req_id}}</td>
           <td contenteditable="false">{{row.name}}</td>
-          <td contenteditable="false"class="column-divider" title="{{ row.email }}"><input type="checkbox" name="email_checkbox" value="{{ row.email }}">   {{ row.email }}</td>
+          <td contenteditable="false">{{row.email}}</td>
+          <!-- <td contenteditable="false"class="column-divider" title="{{ row.email }}"><input type="checkbox" name="email_checkbox" value="{{ row.email }}">   {{ row.email }}</td> -->
           <td contenteditable="false">{{row.phone}}</td>
           <td contenteditable="false">{{row.status}}</td>
           <td contenteditable="false">{{row.test_score}}</td>
-          <td contenteditable="false">{{row.interview_score}}</td>
+          <!-- <td contenteditable="false">{{row.interview_score}}</td> -->
+          <td contenteditable="false" class="interview-score" data-score="{{row.interview_score | float}}">
+            {% if row.test_score | float  >= 20 %}
+              <span style="color: green;" class="score-pass">Pass</span>
+            {% else %}
+              <span style="color: red;" class="score-fail">Fail</span>
+            {% endif %}
+          </td>
+          <td contenteditable="false"></td>
           <td>
-            <button class="btn btn-primary" onclick="editRow(this)">Edit</button>
+            <button class="btn btn-primary" style="width: 60px; background-color: #e78cb1;; border: white;" onclick="editRow(this)">Edit</button>
             <button class="btn btn-success" onclick="saveRow(this)" style="display: none;">Save</button>
+            <button class="btn btn-info send-email" style="width: 60px;margin-top: 2px;" onclick="sendEmail(this)" data-email="{{ row.email }}" disabled>Email</button>
           </td>
         </tr>
         {% endfor %}
