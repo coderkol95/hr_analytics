@@ -20,16 +20,16 @@ function save_job_desc(requisition_id) {
     data: JSON.stringify(dataToSend),
     contentType: "application/json",
     dataType: 'json',
-    // success: function(response) {
-    //   if (response.success) {
-    //     alert("Success!!! Job description is saved.");
-    //   } else {
-    //     alert("Success!!! Job description updated and saved.");
-    //   }
-    // },
-    // error: function(error) {
-    //   // Handle the error response if needed
-    //   alert("Error!!! Unable to save the Job");
-    // }
+    success: function(response) {
+      if (response.success) {
+        alert("Success!!! Job description is saved.");
+      } else {
+        alert("Success!!! Job description updated and saved.");
+      }
+    },
+    error: function(error) {
+      // Handle the error response if needed
+      alert("Error!!! Unable to save the Job");
+    }
   });
 }

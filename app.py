@@ -2,6 +2,7 @@ import os
 import re
 import uuid
 import math
+import time
 import bcrypt
 import pymongo
 import warnings
@@ -189,11 +190,8 @@ def recommend_candidate():
             job_desc = request.form['job_desc']
             selected_roles = request.form.getlist('optionSelect1')
             selected_requisition_ids=request.form.getlist('optionSelect2')
-            print(selected_roles, selected_requisition_ids, job_desc)
-            
-            # Will work when API key is available
-            #best_candidates = score_candidates(job_desc, selected_roles)
-            best_candidates = pd.DataFrame(data=[['a1','b1','krishnendudey21@gmail.com','d1','e1','f1','g1','h1'],['a2','b2','c2','d2','e2','f2','g2','h2']], columns=['name','phone','email','job_role','skills','desired_skills','matching_skills','relative_score'])
+            # print(selected_roles, selected_requisition_ids, job_desc)
+            best_candidates = score_candidates(job_desc, selected_roles)
 
             return render_template("recommend_candidate.html", job_roles=job_roles, requisition_ids=selected_requisition_ids,
                                    scores=best_candidates.to_dict(orient='records'), flag=True)
@@ -219,19 +217,15 @@ def parse_resume():
             response_list=[]
             for file in files:
                 filename = secure_filename(file.filename)
-                ### pdf_path : Anupam
+                ### pdf_path : for Mac
                 # pdf_path = 'uploads/' + filename   
-                ### pdf_path : KD
+                ### pdf_path : for windows
                 pdf_path = '.\\uploads\\' + filename   
                 # file.save(pdf_path)
-                # response = parseResume(pdf_path)  ## dictionary
-                response = {'name': 'Praveen Srikaram', 'contact_number': '(+91)7013815534', 'email_id': 'praveensaikrishna7722@gmail.com', 'linkedIn_id': 'www.linkedin.com/in/praveen-srikaram', 'educational_background': 'B. Tech in Mechanical Engineering from SRKR Engineering College with CGPA 8.6 (86%) and Specialization in Math-Physics-Chemistry from Pragati Junior College with overall percentage 98%', 'years_of_experience': '2 years', 'identified_job_role': 'Data Analyst', 'technical_skillsets': 'Python, Requests, Beautiful Soup, NumPy, Pandas, Matplotlib, Seaborne, JSON file handling, modular programming', 'past_job_experience': 'Data Analyst-Systems Engineer at TATA CONSULTANCY SERVICES from Jan 2022 to till date and Assistant Systems Engineer at TATA CONSULTANCY SERVICES from Mar 2021 to Feb 2022', 'certifications': 'Not Mentioned in Resume', 'projects': 'TV-analysis, COVID-19 analysis, Event management app', 'publication': 'Not Mentioned in Resume', 'awards': 'Not Mentioned in Resume'} 
+                response = parseResume(pdf_path)  ## dictionary
                 response.update({'requisition_id':req_ids[0]})
                 response_list.append(response)    ## 
                 print(response_list)
-
-            # parsed_resume=pd.read_csv("parsed_resumes.csv")
-            # parsed_resume.to_csv('parsed_resumes.csv',index=False)
             
             return render_template("parse_resume.html", requisition_ids = requisition_ids,
                                                         responses=response_list)
@@ -247,14 +241,15 @@ def save_parsed_resume():
         # Currently just adding a new row every time a resume is parsed
         global collection
         response = request.get_json()
+        print(response)
         collection.insert_one(response)
         # data=collection.find()   ## will fetch all the parsed resume data
         # df = pd.DataFrame(data)
         ### Optional Step: Not recommended for building a scalable solution
         ## df.to_csv('parsed_resumes.csv')  
-        return redirect(url_for('available_candidates'))
+        return {"success": True}
     else:
-        return redirect("/")
+        return {"success": True}
 
 @app.route("/save_job_desc", methods=['GET','POST'])
 def save_job_desc():
@@ -290,9 +285,20 @@ def shortlist_candidates():
     if "user_id" in session:
         if request.method=="POST":
             emails = request.form.getlist('email_checkbox')
+            print(emails)
             for email in emails:
                     try:
-                        jd = "It needs to come from somewhere"
+                        jb_obj =jd_collection.find({'requisition_id': '0987612345'})         
+                        candidate_obj = collection.find({'email':email},{'requisition_id'})
+                        req_id = None
+                        jd = ""
+                        for i in candidate_obj:
+                            req_id = i['requisition_id']
+
+                        jb_obj = jd_collection.find({'requisition_id': req_id})
+                        for j in jb_obj:
+                            jd = j['job_description']
+
                         candidate_credentials_obj = CandidateCredentials(db_config)
                         ## Creating PW for the candidate to login in test portal
                         candidate_credentials_obj.create_candidate_credentials(email)
@@ -310,17 +316,18 @@ def shortlist_candidates():
                             resume_qna_obj.insertDescriptiveQAforCandidate(resume_subjective_questions)
                             print("Success !!! Subjectives are Generated")
 
-                        ### Good to have but will see later.
+                        # To keep the number of questions limited to 10 only, we have not produced the JD based questions
+                        
                         # jd_qna_obj = JDQnAGenerator(email, jd)
                         # jd_objective_question_prompt = jd_qna_obj.promptMCQsfromJD()
                         # jd_subjective_question_prompt =  jd_qna_obj.promptDescriptiveQuestionsfromJD()
 
                         # if jd_objective_question_prompt:
                         #     jd_objective_questions = jd_qna_obj.askGPT(jd_objective_question_prompt)
-                        #     jd_qna_obj.insertMCQAforCandidate(jd_objective_questions)
+                        #     jd_qna_obj.insertJDMCQAforCandidate(jd_objective_questions)
                         # if jd_subjective_question_prompt:
                         #     jd_subjective_questions = jd_qna_obj.askGPT(jd_subjective_question_prompt)
-                        #     jd_qna_obj.insertDescriptiveQAforCandidate(jd_subjective_questions)
+                        #     jd_qna_obj.insertJDDescriptiveQAforCandidate(jd_subjective_questions)
 
                         candidate_qna.update_one({"email": email}, 
                                                  {"$set": {"status": "Round 1 Initiated"}})
@@ -345,10 +352,9 @@ def shortlist_candidates():
 def send_email():
     data = request.get_json()
     email = data['email']
-    email_= 'kd.datascience@gmail.com'
     mail_obj = EmailCandidate()
-    mail_obj.inviteCandidateForInterview(email_)
-    print(email)
+    mail_obj.inviteCandidateForInterview(email)
+    #print(email)
     print("Success !!! Candidate's is sent email for Round 2")    
     candidate_qna.update_one({"email": email}, 
                                 {"$set": {"status": "Round 2 Initiated"}})    
@@ -411,10 +417,10 @@ def save_journey():
     new_data = request.json
     data=[]
     data.append(new_data)
-    print(data)
+    #print(data)
     #candidate_qna.insert_one(new_data)
     candidate_email_id = new_data['email']
-    print(candidate_email_id)
+    #print(candidate_email_id)
     candidate_qna.update_one({"email": candidate_email_id},
                             {"$set": new_data})
     data.clear()

@@ -34,7 +34,7 @@
           <th>Email ID</th>
           <th>Phone Number</th>
           <th>Recruitment Status</th>
-          <th>Round 1 Score(%)</th>
+          <th>Round1 Score(%)</th>
           <th>Round1 Status</th>
           <th>Round2 Status</th>
           <th></th>
@@ -52,7 +52,9 @@
           <td contenteditable="false">{{row.test_score}}</td>
           <!-- <td contenteditable="false">{{row.interview_score}}</td> -->
           <td contenteditable="false" class="interview-score" data-score="{{row.interview_score | float}}">
-            {% if row.test_score | float  >= 20 %}
+            {% if row.test_score is defined and row.test_score != row.test_score%}
+              <span style="color: rgb(86, 85, 99);" class="score-pass"></span>
+            {% elif row.test_score | float  >= 25 %}
               <span style="color: green;" class="score-pass">Pass</span>
             {% else %}
               <span style="color: red;" class="score-fail">Fail</span>
